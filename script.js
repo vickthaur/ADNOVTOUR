@@ -1,0 +1,172 @@
+/** * 🎯 CONFIGURATION ADNOV TOUR - Système Automatisé
+ * 🧠 LE CERVEAU CENTRAL
+ */ 
+
+// 🔑 CLÉ API BREVO (SÉCURISÉE)
+const BREVO_API_KEY = "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";
+
+const adnovEvents = { 
+    
+    // 🔵 ÉVÉNEMENT PRINCIPAL : ADNOV TOUR
+    "adnov_tour": { 
+        id: "adnov_tour",  
+        actif: true, 
+        nom: "ADNOV TOUR", 
+        couleur: "#0a3f70",       /* Bleu Marine ADNOV */
+        couleurAccent: "#2b40d3", /* Bleu Électrique */
+        
+        // 🛠️ CONFIGURATION BREVO
+        listeId: [9],
+        statutDefaut: "Inscrit",
+        statutPresence: "Présent",
+        
+        // 🔗 Liens Externes (pour redirection)
+        formInscription: "index.html",
+        pageScan: "scan.html"
+    }, 
+
+    // ⚪ MODE NEUTRE / MAINTENANCE
+    "default": { 
+        id: "default", 
+        actif: false, 
+        nom: "ADNOV", 
+        couleur: "#64748b", 
+        couleurAccent: "#94a3b8",
+        listeId: [],
+        statutDefaut: "En attente"
+    } 
+}; 
+
+/**
+ * 🎨 APPLIQUER LA CONFIGURATION (Design & Sécurité)
+ */
+function appliquerConfig() { 
+    const urlParams = new URLSearchParams(window.location.search); 
+    // On peut changer d'événement via ?event=adnov_tour (utile si tu as plusieurs salons)
+    const eventID = urlParams.get('event') || "adnov_tour"; 
+    const config = adnovEvents[eventID] || adnovEvents["default"]; 
+
+    // 🛡️ Kill Switch (Si l'événement est désactivé)
+    if (config.actif === false && config.id !== "default") { 
+        document.body.innerHTML = `
+        <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#0f172a; color:white; font-family:sans-serif; text-align:center; padding:20px;"> 
+            <div> 
+                <h1 style="color:#fdc533; font-size:40px;">🛡️</h1> 
+                <h2 style="margin-top:10px;">Accès Suspendu</h2> 
+                <p style="color:#94a3b8; margin-top:10px;">Le portail d'enregistrement ADNOV est temporairement inactif.</p> 
+                <p style="color:#64748b; font-size:12px; margin-top:30px; letter-spacing:1px; font-weight:bold;">SECURED BY ADNOV</p> 
+            </div> 
+        </div>`; 
+        throw new Error("Arrêt de l'application : Événement inactif."); 
+    } 
+
+    // Injection des variables CSS
+    document.documentElement.style.setProperty('--primary', config.couleur); 
+    document.documentElement.style.setProperty('--accent', config.couleurAccent); 
+    document.documentElement.style.setProperty('--primary-glow', config.couleurAccent + '4D'); 
+
+    document.title = config.nom + " | Portail Officiel"; 
+    
+    // Mise à jour des textes si présents
+    document.querySelectorAll('.nom-event').forEach(el => el.innerText = config.nom); 
+
+    return config; 
+}
+
+/**
+ * 🛠️ UTILITAIRES DE FORMULAIRE
+ */
+const helpers = {
+    // Formate le téléphone en +33
+    formatPhone: (number) => {
+        let n = number.trim().replace(/\s/g, '');
+        if (n.startsWith('0')) return '+33' + n.substring(1);
+        return n;
+    }
+};
+
+/**
+ * 🚀 INITIALISATION AUTOMATIQUE SELON LA PAGE
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const config = appliquerConfig();
+
+    // --- LOGIQUE LANDING PAGE (index.html) ---
+    const form = document.getElementById('form-inscription');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = 'Traitement...';
+            btn.disabled = true;
+
+            const payload = {
+                email: document.getElementById('email').value.trim(),
+                listIds: config.listeId,
+                updateEnabled: true,
+                attributes: {
+                    NOM: document.getElementById('nom').value.trim(),
+                    PRENOM: document.getElementById('prenom').value.trim(),
+                    VILLE: document.getElementById('ville').value.trim(),
+                    ETUDES: document.getElementById('etudes').value.trim(),
+                    FONCTION: document.getElementById('fonction').value.trim(),
+                    SMS: helpers.formatPhone(document.getElementById('sms').value),
+                    COMMERCIAL_REFERENT: document.getElementById('commercial').value.trim(),
+                    CENTRES_INTERET: document.querySelector('input[name="INTERETS"]:checked')?.value || "",
+                    A_RECONTACTER: document.getElementById('recontacter').checked,
+                    STATUT_EVENT: config.statutDefaut
+                }
+            };
+
+            try {
+                const res = await fetch('https://api.brevo.com/v3/contacts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
+                    document.getElementById('form-state').style.display = 'none';
+                    document.getElementById('success-state').style.display = 'block';
+                }
+            } catch (err) { alert("Erreur de connexion."); btn.disabled = false; }
+        });
+    }
+
+    // --- LOGIQUE VALIDATION (valider.html) ---
+    const validerUI = document.getElementById('loading-ui');
+    if (validerUI) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
+        async function processCheckIn() {
+            try {
+                // 1. Récupération
+                const res = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+                    headers: { 'api-key': BREVO_API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const attr = data.attributes;
+                    
+                    document.getElementById('loading-ui').style.display = 'none';
+                    document.getElementById('result-ui').style.display = 'block';
+                    document.getElementById('res-fullname').innerText = `${attr.PRENOM} ${attr.NOM}`;
+                    document.getElementById('res-fonction').innerText = attr.FONCTION;
+                    document.getElementById('res-etude').innerText = attr.ETUDES;
+                    document.getElementById('res-ville').innerText = attr.VILLE;
+
+                    // 2. Update Statut
+                    await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
+                        body: JSON.stringify({ attributes: { STATUT_EVENT: config.statutPresence } })
+                    });
+                    document.getElementById('res-status').innerHTML = "✅ ENTRÉE VALIDÉE";
+                    document.getElementById('res-status').className = "status-badge status-success";
+                }
+            } catch (err) { console.error(err); }
+        }
+        if (email) processCheckIn();
+    }
+});

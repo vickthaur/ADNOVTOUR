@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADNOV TOUR | Inscription</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+
+    <div class="card">
+        <div id="form-state">
+            <div class="brand-badge">Événement Exclusif</div>
+            <h1 class="main-title">ADNOV TOUR</h1>
+            <p class="subtitle">Inscrivez-vous pour valider votre présence et obtenir votre QR code d'accès.</p>
+
+            <form id="form-inscription">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Entrez votre NOM *</label>
+                        <input type="text" id="nom" name="NOM" placeholder="Ex: Dupont" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Entrez votre PRENOM *</label>
+                        <input type="text" id="prenom" name="PRENOM" placeholder="Ex: Jean" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Entrez votre VILLE *</label>
+                        <input type="text" id="ville" name="VILLE" placeholder="Ex: Lyon" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Entrez votre ETUDES *</label>
+                        <input type="text" id="etudes" name="ETUDES" placeholder="Nom de l'office" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Entrez votre FONCTION *</label>
+                        <input type="text" id="fonction" name="FONCTION" placeholder="Ex: Notaire" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Entrez votre SMS *</label>
+                        <input type="tel" id="sms" name="SMS" placeholder="+33 6..." required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Veuillez renseigner votre adresse email pour vous inscrire *</label>
+                        <input type="email" id="email" name="EMAIL" placeholder="jean.dupont@xyz.com" required>
+                    </div>
+                </div>
+
+                <div class="interests-container">
+                    <label class="section-label">Personnalisez ce libellé (Intérêts) *</label>
+                    <div class="radio-grid">
+                        <label class="radio-card">
+                            <input type="radio" name="INTERETS" value="cybersécurité" required>
+                            <div class="radio-tile">Cybersécurité</div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="INTERETS" value="VigiNot">
+                            <div class="radio-tile">VigiNot</div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="INTERETS" value="DictaNot">
+                            <div class="radio-tile">DictaNot</div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="INTERETS" value="Visio">
+                            <div class="radio-tile">Visio</div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="INTERETS" value="DPO">
+                            <div class="radio-tile">DPO</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group full-width" style="margin-top: 10px;">
+                    <label>Entrez votre COMMERCIAL REFERENT *</label>
+                    <input type="text" id="commercial" name="COMMERCIAL_REFERENT" placeholder="Nom du commercial" required>
+                </div>
+
+                <div class="recontact-container">
+                    <input type="checkbox" id="recontacter" name="A_RECONTACTER" value="Oui">
+                    <div class="recontact-text">
+                        <strong>Souhaitez-vous être recontacté ?</strong>
+                        <p>Case à cocher (Je souhaite être recontacté)</p>
+                    </div>
+                </div>
+                
+                <button type="submit" id="btn-submit" class="submit-button">S'INSCRIRE</button>
+            </form>
+        </div>
+
+        <div id="success-state" style="display: none;">
+            <div class="success-icon">✨</div>
+            <h2 class="success-title">C'est validé !</h2>
+            <p class="subtitle" style="margin-top: 10px;">
+                Votre inscription pour <strong>ADNOV TOUR</strong> est confirmée.<br>
+                Surveillez votre boîte mail, votre badge et votre QR Code viennent de vous être envoyés.
+            </p>
+            
+            <div class="attendee-summary">
+                <p id="summary-name"><strong>Prénom Nom</strong></p>
+                <p id="summary-etude">Étude / Structure</p>
+            </div>
+
+            <button onclick="window.location.href = window.location.href;" class="btn-retour">Faire une autre inscription</button>
+        </div>
+
+        <div class="footer">SECURED BY <strong>ADNOV</strong></div>
+    </div>
+
+</body>
+</html>
