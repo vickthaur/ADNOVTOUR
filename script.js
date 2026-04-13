@@ -26,7 +26,9 @@ const adnovEvents = {
         
         // 🔗 Liens Externes
         formInscription: "index.html",
-        pageScan: "scan.html"
+        pageScan: "scan.html",
+        // LIEN LISTE DE PASSAGE (Inscription sur place)
+        formPassage: "https://9d65705b.sibforms.com/serve/MUIFAMyGzKFsP_p6Ahvu-Ov190DRV286CKjH4D0wEsSoxtbDyFRF5uWapFtxwnzESDnlC0Ci7s6wLCAVpGMx3DZ6OqxpO3TH4uxsmM7n7-7R8DPyOgltdeLbveH9HlfD9OvrQJcq3ssEPqTKswBfhnunX-bWQsHTaqZQCk1P9lp_ji5YIncK0rRSeFpX0AIJxO7Qc-mmrgZfXJi9dQ=="
     }, 
 
     // ⚪ MODE NEUTRE / MAINTENANCE
@@ -38,7 +40,8 @@ const adnovEvents = {
         couleurAccent: "#94a3b8",
         listeId: [],
         statutInscription: "En attente",
-        statutPresence: "Présent"
+        statutPresence: "Présent",
+        formPassage: "#"
     } 
 }; 
 
@@ -50,7 +53,6 @@ function appliquerConfig() {
     const eventID = urlParams.get('event') || "adnov_tour"; 
     const config = adnovEvents[eventID] || adnovEvents["default"]; 
 
-    // 🛡️ Kill Switch (Si l'événement est désactivé)
     if (config.actif === false && config.id !== "default") { 
         document.body.innerHTML = `
         <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#0f172a; color:white; font-family:sans-serif; text-align:center; padding:20px;"> 
@@ -64,14 +66,10 @@ function appliquerConfig() {
         throw new Error("Arrêt de l'application : Événement inactif."); 
     } 
 
-    // Injection des variables CSS
     document.documentElement.style.setProperty('--primary', config.couleur); 
     document.documentElement.style.setProperty('--accent', config.couleurAccent); 
     document.documentElement.style.setProperty('--primary-glow', config.couleurAccent + '4D'); 
-
     document.title = config.nom + " | Portail Officiel"; 
-    
-    // Mise à jour des textes si présents
     document.querySelectorAll('.nom-event').forEach(el => el.innerText = config.nom); 
 
     return config; 
@@ -89,7 +87,7 @@ const helpers = {
 };
 
 /**
- * 🚀 INITIALISATION AUTOMATIQUE SELON LA PAGE
+ * 🚀 INITIALISATION AUTOMATIQUE
  */
 document.addEventListener('DOMContentLoaded', () => {
     const config = appliquerConfig();
@@ -117,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     COMMERCIAL_REFERENT: document.getElementById('commercial').value.trim(),
                     CENTRES_INTERET: document.querySelector('input[name="INTERETS"]:checked')?.value || "",
                     A_RECONTACTER: document.getElementById('recontacter').checked,
-                    STATUT_EVENT: config.statutInscription // Corrigé ici
+                    STATUT_EVENT: config.statutInscription
                 }
             };
 
@@ -130,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (res.ok || res.status === 201 || res.status === 204) {
                     document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
-                    // On s'assure que l'ID correspond bien à ton HTML (etudes ou summary-etude)
                     const etudeEl = document.getElementById('summary-etude');
                     if(etudeEl) etudeEl.innerText = payload.attributes.ETUDES;
                     
@@ -143,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.innerHTML = "S'INSCRIRE";
                 }
             } catch (err) { 
-                alert("Erreur de connexion au serveur."); 
+                alert("Erreur de connexion."); 
                 btn.disabled = false; 
                 btn.innerHTML = "S'INSCRIRE";
             }
@@ -159,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         async function processCheckIn() {
             if (!email) return;
             try {
-                // 1. Récupération des infos du contact
                 const res = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
                     headers: { 'api-key': BREVO_API_KEY }
                 });
@@ -175,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('res-etude').innerText = attr.ETUDES || "-";
                     document.getElementById('res-ville').innerText = attr.VILLE || "-";
 
-                    // 2. Mise à jour du Statut en "Présent"
                     await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
@@ -188,11 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         statusBadge.className = "status-badge status-success";
                     }
                 } else {
+                    // CAS BADGE INCONNU : AJOUT DU BOUTON INSCRIPTION SUR PLACE
                     document.getElementById('loading-ui').innerHTML = `
                         <div style="font-size:50px; margin-bottom:20px;">❌</div>
                         <h1 style="font-size:24px;">Badge Inconnu</h1>
-                        <p style="color:#94a3b8; margin: 15px 0 25px;">Ce participant n'existe pas.</p>
-                        <a href="scan.html" style="background:var(--accent); color:white; padding:15px; border-radius:12px; text-decoration:none; display:block; font-weight:700;">RETOUR SCAN</a>`;
+                        <p style="color:#94a3b8; margin: 15px 0 25px;">Ce participant n'existe pas dans la base.</p>
+                        <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+                            <a href="${config.formPassage}" target="_blank" style="background:#fdc533; color:#0a3f70; padding:15px; border-radius:14px; text-decoration:none; font-weight:800; font-size:14px;">INSCRIPTION SUR PLACE</a>
+                            <a href="scan.html" style="background:rgba(255,255,255,0.1); color:white; padding:15px; border-radius:14px; text-decoration:none; font-weight:700; font-size:14px;">RETOUR SCAN</a>
+                        </div>`;
                 }
             } catch (err) { 
                 console.error("Erreur de validation:", err); 
