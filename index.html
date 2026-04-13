@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script src="script.js" defer></script> 
 </head>
 <body>
 
@@ -18,7 +18,7 @@
             <h1 class="main-title">ADNOV TOUR</h1>
             <p class="subtitle">Inscrivez-vous pour valider votre présence et obtenir votre QR code d'accès.</p>
 
-            <form id="form-inscription">
+            <form id="form-inscription" onsubmit="event.preventDefault(); return false;">
                 
                 <div class="form-grid">
                     <div class="form-group">
@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group">
                         <label>Entrez votre SMS *</label>
-                        <input type="tel" id="sms" name="SMS" placeholder="+33 6..." required>
+                        <input type="tel" id="sms" name="SMS" placeholder="06..." required>
                     </div>
 
                     <div class="form-group full-width">
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="interests-container">
-                    <label class="section-label">Personnalisez ce libellé (Intérêts) *</label>
+                    <label class="section-label">Vos centres d'intérêts *</label>
                     <div class="radio-grid">
                         <label class="radio-card">
                             <input type="radio" name="INTERETS" value="cybersécurité" required>
@@ -81,15 +81,15 @@
                 </div>
 
                 <div class="form-group full-width" style="margin-top: 10px;">
-                    <label>Entrez votre COMMERCIAL REFERENT *</label>
+                    <label>Votre commercial référent *</label>
                     <input type="text" id="commercial" name="COMMERCIAL_REFERENT" placeholder="Nom du commercial" required>
                 </div>
 
                 <div class="recontact-container">
-                    <input type="checkbox" id="recontacter" name="A_RECONTACTER" value="Oui">
+                    <input type="checkbox" id="recontacter" name="A_RECONTACTER">
                     <div class="recontact-text">
                         <strong>Souhaitez-vous être recontacté ?</strong>
-                        <p>Case à cocher (Je souhaite être recontacté)</p>
+                        <p>Cochez cette case pour qu'un expert vous rappelle.</p>
                     </div>
                 </div>
                 
@@ -98,19 +98,20 @@
         </div>
 
         <div id="success-state" style="display: none;">
-            <div class="success-icon">✨</div>
+            <div class="success-icon-wrapper">✨</div>
             <h2 class="success-title">C'est validé !</h2>
             <p class="subtitle" style="margin-top: 10px;">
                 Votre inscription pour <strong>ADNOV TOUR</strong> est confirmée.<br>
-                Surveillez votre boîte mail, votre badge et votre QR Code viennent de vous être envoyés.
+                Surveillez votre boîte mail, votre badge vient de vous être envoyé.
             </p>
             
             <div class="attendee-summary">
+                <div class="summary-label">Participant enregistré</div>
                 <p id="summary-name"><strong>Prénom Nom</strong></p>
                 <p id="summary-etude">Étude / Structure</p>
             </div>
 
-            <button onclick="window.location.href = window.location.href;" class="btn-retour">Faire une autre inscription</button>
+            <button onclick="window.location.reload();" class="btn-retour">Faire une autre inscription</button>
         </div>
 
         <div class="footer">SECURED BY <strong>ADNOV</strong></div>
