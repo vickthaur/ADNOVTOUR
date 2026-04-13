@@ -18,7 +18,7 @@ const adnovEvents = {
         
         // 🛠️ CONFIGURATION DES LISTES (Vérifie les IDs dans ton Brevo)
         listeInscription: [9],      
-        listePassage: [10],         // <--- METTRE ICI L'ID DE TA LISTE DE PASSAGE
+        listePassage: [10],         // <--- ID DE TA LISTE DE PASSAGE
         
         statutInscription: "Inscrit",
         statutPresence: "Présent",
@@ -135,13 +135,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = await res.json();
                     const attr = data.attributes;
                     
-                    // Affichage immédiat
+                    // Affichage immédiat dans l'interface
                     document.getElementById('loading-ui').style.display = 'none';
                     document.getElementById('result-ui').style.display = 'block';
                     document.getElementById('res-fullname').innerText = `${attr.PRENOM} ${attr.NOM}`;
                     document.getElementById('res-fonction').innerText = attr.FONCTION || "Non renseigné";
                     document.getElementById('res-etude').innerText = attr.ETUDES || "-";
                     document.getElementById('res-ville').innerText = attr.VILLE || "-";
+                    
+                    // --- AJOUT DES NOUVEAUX ATTRIBUTS ---
+                    const commercialEl = document.getElementById('res-commercial');
+                    if (commercialEl) commercialEl.innerText = attr.COMMERCIAL_REFERENT || "Aucun";
+
+                    const interetEl = document.getElementById('res-interet');
+                    if (interetEl) interetEl.innerText = attr.CENTRES_INTERET || "Général";
+
+                    const emailEl = document.getElementById('res-email');
+                    if (emailEl) emailEl.innerText = data.email || email;
+                    // -------------------------------------
 
                     // 2. DOUBLE ACTION : Ajout à la liste de passage + Statut "Présent"
                     await fetch('https://api.brevo.com/v3/contacts', {
@@ -157,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const statusBadge = document.getElementById('res-status');
                     if (statusBadge) {
-                        statusBadge.innerHTML = "✅ ENTRÉE VALIDÉE & LISTE DE PASSAGE MISE À JOUR";
+                        statusBadge.innerHTML = "✅ ENTRÉE VALIDÉE & LISTE MISE À JOUR";
                         statusBadge.className = "status-badge status-success";
                     }
                 } else {
