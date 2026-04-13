@@ -13,6 +13,7 @@
             --primary: #0a3f70;
             --accent: #2b40d3;
             --success: #10b981;
+            --warning: #fdc533;
             --bg-dark: #0F172A;
             --card-bg: #1E293B;
             --text-muted: #94a3b8;
@@ -31,7 +32,7 @@
 
         .valider-card { 
             background: var(--card-bg); 
-            width: 100%; max-width: 450px; 
+            width: 100%; max-width: 480px; 
             border-radius: 32px; padding: 40px; 
             text-align: center; 
             border: 1px solid rgba(255,255,255,0.1);
@@ -42,30 +43,41 @@
 
         .valider-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
-            background: linear-gradient(90deg, #0a3f70, #2b40d3, #fdc533);
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--warning));
         }
 
         .icon-state {
-            font-size: 50px; margin: 0 auto 20px; height: 90px; width: 90px;
+            font-size: 50px; margin: 0 auto 20px; height: 80px; width: 80px;
             background: rgba(255,255,255,0.05); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
         }
 
         .welcome-tag { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
-        .user-name { font-size: 30px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
-        .user-fonction { font-size: 16px; color: #fdc533; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; }
+        .user-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+        .user-fonction { font-size: 16px; color: var(--warning); font-weight: 700; text-transform: uppercase; margin-bottom: 25px; }
         
+        /* Grille d'informations enrichie */
         .info-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px;
-            margin-bottom: 30px; text-align: left;
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px;
+            background: rgba(0,0,0,0.2); 
+            padding: 20px; 
+            border-radius: 24px;
+            margin-bottom: 25px; 
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .info-item label { display: block; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .info-item { display: flex; flex-direction: column; gap: 4px; }
+        .info-item.full { grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.1); pt: 10px; margin-top: 5px; padding-top: 10px;}
+        
+        .info-item label { font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .info-item span { font-size: 14px; font-weight: 600; color: white; }
+        .highlight { color: var(--warning) !important; }
 
         .status-badge {
             padding: 12px 24px; border-radius: 100px; font-weight: 700; font-size: 13px;
-            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px;
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px;
         }
         .status-loading { background: rgba(255,255,255,0.1); color: white; }
         .status-success { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
@@ -103,6 +115,18 @@
                 <div class="info-item">
                     <label>Ville</label>
                     <span id="res-ville">...</span>
+                </div>
+                <div class="info-item">
+                    <label>Commercial Référent</label>
+                    <span id="res-commercial" class="highlight">...</span>
+                </div>
+                <div class="info-item">
+                    <label>Intérêt principal</label>
+                    <span id="res-interet">...</span>
+                </div>
+                <div class="info-item full">
+                    <label>Contact Email</label>
+                    <span id="res-email" style="font-size: 12px; opacity: 0.8;">...</span>
                 </div>
             </div>
 
