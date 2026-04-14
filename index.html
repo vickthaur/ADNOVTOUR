@@ -20,6 +20,20 @@
 
             <form id="form-inscription" onsubmit="event.preventDefault(); return false;">
                 
+                <div class="form-group full-width" style="margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 700; color: white;">Seriez vous ? *</label>
+                    <div style="display: flex; gap: 30px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #cbd5e1; font-size: 15px; font-weight: 600;">
+                            <input type="radio" name="PRESENCE" value="Présent" required style="width: 18px; height: 18px; accent-color: var(--accent);">
+                            Présent
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #cbd5e1; font-size: 15px; font-weight: 600;">
+                            <input type="radio" name="PRESENCE" value="Absent" required style="width: 18px; height: 18px; accent-color: var(--accent);">
+                            Absent
+                        </label>
+                    </div>
+                </div>
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Entrez votre NOM *</label>
