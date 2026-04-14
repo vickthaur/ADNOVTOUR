@@ -14,7 +14,7 @@
     --bg-app: #f8fafc;
     --bg-card: #ffffff;
     --text-main: #0f172a;
-    --text-muted: #64748b;
+    --text-muted: #475569; /* Gris plus foncé pour une meilleure lecture */
     
     /* Design System Premium */
     --radius-xl: 32px;
@@ -43,7 +43,6 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 30px 20px;
-    /* Fond dégradé subtil ADNOV */
     background-image: 
         radial-gradient(at 0% 0%, rgba(43, 64, 211, 0.05) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(253, 197, 51, 0.03) 0px, transparent 50%);
@@ -70,7 +69,6 @@ body {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Liseré de prestige */
 .card::after {
     content: '';
     position: absolute;
@@ -79,7 +77,6 @@ body {
     background: linear-gradient(90deg, var(--primary), var(--accent), var(--warning));
 }
 
-/* En-tête */
 .brand-badge {
     font-size: 11px;
     font-weight: 800;
@@ -109,7 +106,7 @@ body {
 }
 
 /* ==========================================================================
-   ✍️ FORMULAIRE & INPUTS
+   ✍️ FORMULAIRE & INPUTS (CORRIGÉ : TITRES VISIBLES)
    ========================================================================== */
 .form-grid {
     display: grid;
@@ -120,10 +117,11 @@ body {
 
 .full-width { grid-column: span 2; }
 
+/* FIX: Passage en Bleu Marine pour un contraste maximum sur blanc */
 label, .section-label {
     font-size: 11px;
     font-weight: 800;
-    color: #94a3b8;
+    color: var(--primary); 
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin-bottom: 10px;
@@ -134,7 +132,6 @@ label, .section-label {
 .form-group input {
     width: 100%;
     padding: 18px 22px;
-    border: 2px solid transparent;
     border-radius: var(--radius-md);
     font-size: 15px;
     font-weight: 600;
@@ -165,6 +162,7 @@ label, .section-label {
     padding: 5px;
     border-radius: var(--radius-md);
     gap: 5px;
+    border: 1px solid #e2e8f0;
 }
 
 .presence-options label {
@@ -176,13 +174,12 @@ label, .section-label {
     cursor: pointer;
     font-size: 14px;
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--text-muted); /* Gris foncé pour être lisible */
     transition: var(--transition);
 }
 
 .presence-options input { display: none; }
 
-/* État Actif (L'effet Apple de glissement) */
 .presence-options label:has(input:checked) {
     background: #ffffff;
     color: var(--primary);
@@ -209,6 +206,7 @@ label, .section-label {
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
+    color: var(--text-main);
 }
 
 .radio-card:hover {
@@ -248,7 +246,7 @@ label, .section-label {
 }
 
 /* ==========================================================================
-   🚀 ACTIONS & OPT-IN
+   🚀 ACTIONS & OPT-IN (CORRIGÉ : TEXTE SOMBRE)
    ========================================================================== */
 .optin-container {
     margin: 40px 0;
@@ -284,7 +282,7 @@ input[type="checkbox"]:checked::before {
 
 .optin-text {
     font-size: 13px;
-    color: var(--text-main);
+    color: var(--text-main); /* Assure que le texte RGPD est noir/bleu foncé */
     line-height: 1.5;
 }
 
@@ -316,10 +314,11 @@ input[type="checkbox"]:checked::before {
     align-items: center;
     gap: 15px;
     padding: 22px;
-    background: #fffbeb;
+    background: #fffbea;
     border: 1px dashed var(--warning);
     border-radius: 20px;
     margin-top: 30px;
+    color: #92400e; /* Texte brun foncé pour l'alerte jaune */
 }
 
 /* ==========================================================================
@@ -351,6 +350,7 @@ input[type="checkbox"]:checked::before {
     border-radius: 20px;
     padding: 30px;
     margin: 40px 0;
+    color: var(--text-main);
 }
 
 /* ==========================================================================
