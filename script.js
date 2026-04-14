@@ -87,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 listIds: config.listeInscription,
                 updateEnabled: true,
                 attributes: {
+                    // 🆕 Récupération de la présence (Présent/Absent)
+                    PRESENCE: document.querySelector('input[name="PRESENCE"]:checked')?.value || "",
+                    
                     NOM: document.getElementById('nom').value.trim(),
                     PRENOM: document.getElementById('prenom').value.trim(),
                     VILLE: document.getElementById('ville').value.trim(),
