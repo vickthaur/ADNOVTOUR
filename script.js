@@ -115,8 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const monNumero = "+33785977164"; // Ton numéro au format international
                     const nomInscrit = payload.attributes.PRENOM + " " + payload.attributes.NOM;
                     
-                    // Construction du message SMS avec les nouvelles informations
-                    const messageSMS = `🚨 Nouvelle inscription : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}`;
+                    // On transforme le vrai/faux en OUI/NON pour le SMS
+                    const recontacterTexte = payload.attributes.A_RECONTACTER ? "OUI ✅" : "NON ❌";
+                    
+                    // Construction du message SMS enrichi
+                    const messageSMS = `🚨 Nouvelle inscription : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}\nRecontacter: ${recontacterTexte}`;
                     
                     fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
                         method: 'POST',
