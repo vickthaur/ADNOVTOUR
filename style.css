@@ -322,7 +322,7 @@ body {
 /* ==========================================================================
     ÉCRAN DE SUCCÈS PREMIUM
     ========================================================================== */
-#success-state { text-align: center; display: none; }
+#success-state, #absent-state { text-align: center; display: none; }
 
 .success-icon-wrapper {
     width: 80px; height: 80px; margin: 0 auto 24px;
@@ -336,7 +336,7 @@ body {
     border-radius: var(--radius-md); padding: 24px; margin: 32px 0;
 }
 
-#summary-name { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+#summary-name, #absent-name { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
 #summary-etude { font-size: 15px; color: var(--text-muted); }
 
 .btn-retour {
