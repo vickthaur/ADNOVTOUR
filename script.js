@@ -115,6 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const monNumero = "+33785977164"; // Ton numéro au format international
                     const nomInscrit = payload.attributes.PRENOM + " " + payload.attributes.NOM;
                     
+                    // Construction du message SMS avec les nouvelles informations
+                    const messageSMS = `🚨 Nouvelle inscription : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}`;
+                    
                     fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
@@ -122,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             "type": "transactional",
                             "sender": "ADNOV",
                             "recipient": monNumero,
-                            "content": `🚨 Nouvelle inscription : ${nomInscrit} (Étude: ${payload.attributes.ETUDES}).`
+                            "content": messageSMS
                         })
                     }).catch(err => console.log("Erreur SMS silencieuse :", err));
 
