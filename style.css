@@ -100,7 +100,7 @@ body {
 }
 
 /* ==========================================================================
-   CHAMPS DE SAISIE
+   CHAMPS DE SAISIE CLASSIQUES
    ========================================================================== */
 .form-grid {
     display: grid;
@@ -111,10 +111,12 @@ body {
 
 .full-width { grid-column: span 2; }
 
-.form-group label {
+/* TITRES DES CHAMPS (Uniformisés pour tout le formulaire) */
+.form-group label,
+.section-label {
     font-size: 10px;
     font-weight: 800;
-    color: #94a3b8;
+    color: #94a3b8 !important; /* Force la couleur grise pour annuler tes anciens codes blancs */
     text-transform: uppercase;
     letter-spacing: 1.2px;
     margin-bottom: 8px;
@@ -143,40 +145,37 @@ body {
 }
 
 /* ==========================================================================
-   NOUVEAUX BLOCS : PRÉSENCE & OPT-IN
+   NOUVEAUX BLOCS : PRÉSENCE & OPT-IN (Design unifié)
    ========================================================================== */
 .presence-container {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius-md);
-    padding: 20px;
     margin-bottom: 25px;
     text-align: left;
 }
 
-.presence-container .section-label {
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--primary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 15px;
-    display: block;
-}
-
 .presence-options {
     display: flex;
-    gap: 30px;
+    gap: 15px;
 }
 
+/* Les boutons de présence reprennent le look des "Centres d'intérêts" */
 .presence-options label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    flex: 1; /* Prend la moitié de la largeur chacun */
+    padding: 14px 18px;
+    background: #f8fafc;
+    border-radius: 14px;
     font-size: 15px;
     font-weight: 600;
     color: var(--text-main);
     cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.presence-options label:hover { 
+    background: #f1f5f9; 
+    transform: translateY(-2px); 
 }
 
 .presence-options input[type="radio"] {
@@ -185,6 +184,7 @@ body {
     border: 2px solid #cbd5e1;
     border-radius: 50%;
     background: white;
+    margin-right: 12px;
     transition: var(--transition);
     display: grid;
     place-content: center;
@@ -207,15 +207,21 @@ body {
 
 .presence-options input[type="radio"]:checked::before { transform: scale(1); }
 
+
 /* Block Opt-in */
 .optin-container {
     display: flex;
-    align-items: flex-start;
-    gap: 14px;
+    flex-direction: column;
     margin: 25px 0;
     padding-top: 25px;
     border-top: 1px solid #e2e8f0;
     text-align: left;
+}
+
+.optin-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
 }
 
 .optin-container input[type="checkbox"] {
@@ -266,15 +272,6 @@ body {
    BOUTONS RADIO (Intérêts)
    ========================================================================== */
 .interests-container { margin-bottom: 30px; text-align: left; }
-.section-label {
-    font-size: 10px;
-    font-weight: 800;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 12px;
-    display: block;
-}
 
 .radio-grid {
     display: flex;
@@ -391,5 +388,5 @@ body {
     .form-grid { grid-template-columns: 1fr; gap: 14px; }
     .full-width { grid-column: span 1; }
     .submit-button { padding: 18px; font-size: 15px; }
-    .presence-options { flex-direction: column; gap: 15px; }
+    .presence-options { flex-direction: column; gap: 10px; }
 }
