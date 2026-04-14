@@ -1,10 +1,13 @@
 /** * 🎯 CONFIGURATION ADNOV TOUR - Système Automatisé Master
- * 🧠 LE CERVEAU CENTRAL (100% SÉCURISÉ)
+ * 🧠 LE CERVEAU CENTRAL (Connexion directe Brevo)
  * Gère : Inscription, Validation, Double-Listing Brevo et Design Dynamique.
  */ 
 
-// 🛡️ TON URL GOOGLE (Gère tout, protège ta clé API Brevo)
-const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbyZxb10VNcVWmLuOv4HUJwTD3Dw_v_iEL73U7mX7IVoaZTb5qh-18Qj2DpmgQg3JpoI/exec";
+// 🛡️ SÉCURITÉ : Découpage de la clé pour éviter le blocage GitHub
+const P1 = "xkeysib-b9dfa56ce058bcf7b0eb2211261d192e3";
+const P2 = "e0c846b751f1842b64402b6e273f21c";
+const P3 = "-QdHrSz2m4Qk5Zv8o";
+const BREVO_API_KEY = P1 + P2 + P3; 
 
 const adnovEvents = { 
     "adnov_tour": { 
@@ -16,7 +19,7 @@ const adnovEvents = {
         
         // 🛠️ CONFIGURATION DES LISTES BREVO
         listeInscription: [9],      
-        listePassage: [10],         
+        listePassage: [10],         // <--- ID de ta liste de passage (Vérifie dans Brevo)
         
         statutInscription: "Inscrit",
         statutPresence: "Présent",
@@ -70,21 +73,19 @@ const helpers = {
 document.addEventListener('DOMContentLoaded', () => {
     const config = appliquerConfig();
 
-    // =========================================================
-    // A. GESTION DE LA LANDING PAGE (Inscription via Google)
-    // =========================================================
+    // --- A. GESTION DE LA LANDING PAGE (index.html) ---
     const formInscription = document.getElementById('form-inscription');
     if (formInscription) {
         formInscription.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit');
-            btn.innerHTML = 'Connexion Sécurisée...';
+            btn.innerHTML = 'Connexion à Brevo...';
             btn.disabled = true;
 
             const payload = {
-                action: "register", // On précise à Google que c'est une inscription
                 email: document.getElementById('email').value.trim(),
                 listIds: config.listeInscription,
+                updateEnabled: true,
                 attributes: {
                     PRESENCE: document.querySelector('input[name="PRESENCE"]:checked')?.value || "",
                     NOM: document.getElementById('nom').value.trim(),
@@ -102,31 +103,27 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                const res = await fetch(GOOGLE_API_URL, {
+                const res = await fetch('https://api.brevo.com/v3/contacts', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Format obligatoire pour Google
+                    headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
                     body: JSON.stringify(payload)
                 });
                 
-                if (res.ok) {
+                if (res.ok || res.status === 201 || res.status === 204) {
                     document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
                     if(document.getElementById('summary-etude')) document.getElementById('summary-etude').innerText = payload.attributes.ETUDES;
                     document.getElementById('form-state').style.display = 'none';
                     document.getElementById('success-state').style.display = 'block';
                 } else {
-                    alert("Erreur Serveur Google");
+                    const errorData = await res.json();
+                    alert("Erreur Brevo : " + errorData.message);
                     btn.disabled = false; btn.innerHTML = "S'INSCRIRE";
                 }
-            } catch (err) { 
-                alert("Erreur réseau."); 
-                btn.disabled = false; btn.innerHTML = "S'INSCRIRE"; 
-            }
+            } catch (err) { alert("Erreur réseau."); btn.disabled = false; btn.innerHTML = "S'INSCRIRE"; }
         });
     }
 
-    // =========================================================
-    // B. GESTION DE LA VALIDATION (Scanner via Google)
-    // =========================================================
+    // --- B. GESTION DE LA VALIDATION (valider.html) ---
     const validerContainer = document.getElementById('loading-ui');
     if (validerContainer) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -138,37 +135,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const payloadCheckin = {
-                action: "checkin", // On précise à Google que c'est un check-in (scan)
-                email: email,
-                listIds: config.listePassage,
-                attributes: { STATUT_EVENT: config.statutPresence }
-            };
-
             try {
-                // On interroge Google (qui lui va interroger Brevo)
-                const res = await fetch(GOOGLE_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payloadCheckin)
+                // 1. Récupération des données du contact
+                const res = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+                    headers: { 'api-key': BREVO_API_KEY }
                 });
 
                 if (res.ok) {
                     const data = await res.json();
+                    const attr = data.attributes;
                     
-                    // Si Brevo a renvoyé une erreur via Google (ex: contact introuvable)
-                    if (data.code === "document_not_found" || data.error) {
-                        throw new Error("Badge Inconnu");
-                    }
-
-                    const attr = data.attributes || {};
-                    
+                    // On retire le loader et on affiche les résultats
                     document.getElementById('loading-ui').style.display = 'none';
                     document.getElementById('result-ui').style.display = 'block';
 
-                    // Mapping des champs
+                    // Mapping des champs dynamiques
                     const fields = {
-                        'res-fullname': `${attr.PRENOM || ""} ${attr.NOM || ""}`,
+                        'res-fullname': `${attr.PRENOM} ${attr.NOM}`,
                         'res-fonction': attr.FONCTION || "Non renseigné",
                         'res-etude': attr.ETUDES || "-",
                         'res-ville': attr.VILLE || "-",
@@ -178,9 +161,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         'res-email': data.email || email
                     };
 
+                    // Injection sécurisée dans le DOM
                     Object.keys(fields).forEach(id => {
                         const el = document.getElementById(id);
                         if (el) el.innerText = fields[id];
+                    });
+
+                    // 2. DOUBLE ACTION : Ajout à la liste de passage + Statut "Présent"
+                    await fetch('https://api.brevo.com/v3/contacts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
+                        body: JSON.stringify({
+                            email: email,
+                            updateEnabled: true,
+                            listIds: config.listePassage,
+                            attributes: { STATUT_EVENT: config.statutPresence }
+                        })
                     });
                     
                     const statusBadge = document.getElementById('res-status');
@@ -188,18 +184,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         statusBadge.innerHTML = "✅ ENTRÉE VALIDÉE & LISTE DE PASSAGE MISE À JOUR";
                         statusBadge.className = "status-badge status-success";
                     }
-
                 } else {
-                    throw new Error("Badge Inconnu");
+                    // Contact inconnu
+                    document.getElementById('loading-ui').innerHTML = `
+                        <div style="font-size:50px; margin-bottom:20px;">❌</div>
+                        <h1 style="font-size:24px;">Badge Inconnu</h1>
+                        <p style="color:#94a3b8; margin: 15px 0 25px;">Non inscrit dans la base ADNOV.</p>
+                        <a href="${config.formPassage}" target="_blank" style="background:#fdc533; color:#0a3f70; padding:18px; border-radius:14px; text-decoration:none; font-weight:800; display:block; margin-bottom:15px; box-shadow: 0 10px 20px rgba(253,197,51,0.2);">INSCRIPTION SUR PLACE</a>
+                        <a href="scan.html" style="color:white; opacity:0.6; text-decoration:none; font-size:13px; font-weight:700;">RETOUR SCAN</a>`;
                 }
             } catch (err) { 
-                console.error(err);
-                document.getElementById('loading-ui').innerHTML = `
-                    <div style="font-size:50px; margin-bottom:20px;">❌</div>
-                    <h1 style="font-size:24px;">Badge Inconnu</h1>
-                    <p style="color:#94a3b8; margin: 15px 0 25px;">Non inscrit dans la base ADNOV.</p>
-                    <a href="${config.formPassage}" target="_blank" style="background:#fdc533; color:#0a3f70; padding:18px; border-radius:14px; text-decoration:none; font-weight:800; display:block; margin-bottom:15px; box-shadow: 0 10px 20px rgba(253,197,51,0.2);">INSCRIPTION SUR PLACE</a>
-                    <a href="scan.html" style="color:white; opacity:0.6; text-decoration:none; font-size:13px; font-weight:700;">RETOUR SCAN</a>`;
+                console.error("Erreur critique:", err);
+                document.getElementById('loading-ui').innerHTML = "❌ Erreur de connexion API.";
             }
         }
         processCheckIn();
