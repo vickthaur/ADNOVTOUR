@@ -82,15 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = 'Connexion à Brevo...';
             btn.disabled = true;
 
-            const presenceValue = document.querySelector('input[name="PRESENCE"]:checked')?.value || "";
-            const isAbsent = (presenceValue === "Absent");
+            // --- RÉCUPÉRATION DU STATUT (Via le nom STATUT_EVENT du HTML) ---
+            const statusValue = document.querySelector('input[name="STATUT_EVENT"]:checked')?.value || "";
+            const isAbsent = (statusValue === "Absent");
 
             const payload = {
                 email: document.getElementById('email').value.trim(),
                 listIds: config.listeInscription,
                 updateEnabled: true,
                 attributes: {
-                    PRESENCE: presenceValue,
+                    STATUT_EVENT: statusValue, // Map le choix "Présent" ou "Absent"
                     NOM: document.getElementById('nom').value.trim(),
                     PRENOM: document.getElementById('prenom').value.trim(),
                     VILLE: document.getElementById('ville').value.trim(),
@@ -100,9 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     COMMERCIAL_REFERENT: document.getElementById('commercial').value.trim(),
                     CENTRES_INTERET: document.querySelector('input[name="INTERETS"]:checked')?.value || "",
                     A_RECONTACTER: document.getElementById('recontacter').checked,
-                    OPT_IN: document.getElementById('optin').checked,
-                    // ON ENVOIE TOUJOURS LE STATUT CONFIGURÉ (L'automation Brevo gère le tri)
-                    STATUT_EVENT: config.statutInscription
+                    OPT_IN: document.getElementById('optin').checked // Map le consentement RGPD
                 }
             };
 
@@ -115,12 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (res.ok || res.status === 201 || res.status === 204) {
                     
+                    // 📱 2. ENVOI DU SMS À L'ORGANISATEUR (En tâche de fond)
                     const monNumero = "+33785977164"; 
                     const nomInscrit = payload.attributes.PRENOM + " " + payload.attributes.NOM;
                     const recontacterTexte = payload.attributes.A_RECONTACTER ? "OUI ✅" : "NON ❌";
                     const smsTitre = isAbsent ? "⚠️ ABSENCE NOTIFIÉE" : "🚨 NOUVELLE INSCRIPTION";
                     
-                    const messageSMS = `${smsTitre} : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}\nRecontacter: ${recontacterTexte}`;
+                    const messageSMS = `${smsTitre} : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nStatut: ${payload.attributes.STATUT_EVENT}\nRecontacter: ${recontacterTexte}`;
                     
                     fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
                         method: 'POST',
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                     }).catch(err => console.log("Erreur SMS silencieuse :", err));
 
-                    // --- LOGIQUE D'AFFICHAGE VISUEL ---
+                    // --- LOGIQUE D'AFFICHAGE DIFFÉRENCIÉE ---
                     document.getElementById('form-state').style.display = 'none';
 
                     if (isAbsent) {
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'res-ville': attr.VILLE || "-",
                         'res-commercial': attr.COMMERCIAL_REFERENT || "Aucun",
                         'res-interet': attr.CENTRES_INTERET || "Général",
-                        'res-presence': attr.PRESENCE || "Non renseigné",
+                        'res-presence': attr.STATUT_EVENT || "Non renseigné",
                         'res-email': data.email || email
                     };
 
