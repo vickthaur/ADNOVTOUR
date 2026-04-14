@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 📱 2. ENVOI DU SMS À L'ORGANISATEUR (En tâche de fond)
                     const monNumero = "+33785977164"; 
                     const nomInscrit = payload.attributes.PRENOM + " " + payload.attributes.NOM;
-                    const recontacterTexte = payload.attributes.A_RECONTACTER ? "OUI ✅" : "NON ❌";
-                    const smsTitre = isAbsent ? "⚠️ ABSENCE NOTIFIÉE" : "🚨 NOUVELLE INSCRIPTION";
+                    const recontacterTexte = payload.attributes.A_RECONTACTER ? "OUI" : "NON";
+                    const smsTitre = isAbsent ? "ABSENCE NOTIFIÉE" : "NOUVELLE INSCRIPTION";
                     
                     const messageSMS = `${smsTitre} : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nStatut: ${payload.attributes.STATUT_EVENT}\nRecontacter: ${recontacterTexte}`;
                     
