@@ -82,12 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = 'Connexion à Brevo...';
             btn.disabled = true;
 
+            // --- AJOUT : RÉCUPÉRATION DU STATUT ---
+            const presenceValue = document.querySelector('input[name="PRESENCE"]:checked')?.value || "";
+            const isAbsent = (presenceValue === "Absent");
+
             const payload = {
                 email: document.getElementById('email').value.trim(),
                 listIds: config.listeInscription,
                 updateEnabled: true,
                 attributes: {
-                    PRESENCE: document.querySelector('input[name="PRESENCE"]:checked')?.value || "",
+                    PRESENCE: presenceValue,
                     NOM: document.getElementById('nom').value.trim(),
                     PRENOM: document.getElementById('prenom').value.trim(),
                     VILLE: document.getElementById('ville').value.trim(),
@@ -98,7 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     CENTRES_INTERET: document.querySelector('input[name="INTERETS"]:checked')?.value || "",
                     A_RECONTACTER: document.getElementById('recontacter').checked,
                     OPT_IN: document.getElementById('optin').checked,
-                    STATUT_EVENT: config.statutInscription
+                    // MODIFICATION : Si absent, on marque Absent pour tes filtres Brevo
+                    STATUT_EVENT: isAbsent ? "Absent" : config.statutInscription
                 }
             };
 
@@ -118,8 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     // On transforme le vrai/faux en OUI/NON pour le SMS
                     const recontacterTexte = payload.attributes.A_RECONTACTER ? "OUI ✅" : "NON ❌";
                     
+                    // MODIFICATION SMS : Titre adapté si absent
+                    const smsTitre = isAbsent ? "⚠️ ABSENCE NOTIFIÉE" : "🚨 NOUVELLE INSCRIPTION";
+                    
                     // Construction du message SMS enrichi
-                    const messageSMS = `🚨 Nouvelle inscription : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}\nRecontacter: ${recontacterTexte}`;
+                    const messageSMS = `${smsTitre} : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}\nRecontacter: ${recontacterTexte}`;
                     
                     fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
                         method: 'POST',
@@ -132,11 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                     }).catch(err => console.log("Erreur SMS silencieuse :", err));
 
-                    // 3. Affichage du succès pour l'utilisateur
-                    document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
-                    if(document.getElementById('summary-etude')) document.getElementById('summary-etude').innerText = payload.attributes.ETUDES;
+                    // --- AJOUT : LOGIQUE D'AFFICHAGE DIFFÉRENCIÉE ---
                     document.getElementById('form-state').style.display = 'none';
-                    document.getElementById('success-state').style.display = 'block';
+
+                    if (isAbsent) {
+                        // Affichage de la validation Absent
+                        document.getElementById('absent-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
+                        document.getElementById('absent-state').style.display = 'block';
+                    } else {
+                        // Affichage du succès classique (Présent)
+                        document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
+                        if(document.getElementById('summary-etude')) document.getElementById('summary-etude').innerText = payload.attributes.ETUDES;
+                        document.getElementById('success-state').style.display = 'block';
+                    }
 
                 } else {
                     const errorData = await res.json();
