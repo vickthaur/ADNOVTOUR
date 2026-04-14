@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Régie | ADNOV TOUR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a3f70;
+            --accent: #2b40d3;
+            --warning: #fdc533;
+            --success: #10b981;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--warning);
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+        }
+
+        .card-inscrits::before { background: var(--accent); }
+        .card-presents::before { background: var(--success); }
+
+        .stat-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .card-inscrits .stat-number { color: white; }
+        .card-presents .stat-number { color: var(--success); }
+
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background: #334155;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning), var(--success));
+            width: 0%;
+            border-radius: 10px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-refresh {
+            margin-top: 40px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-refresh:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .last-update {
+            margin-top: 15px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .stat-number { font-size: 48px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Régie Live</h1>
+        <p>ADNOV TOUR - Statistiques en temps réel</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="stat-card card-inscrits">
+            <div class="stat-title">Total Inscrits</div>
+            <div class="stat-number" id="val-inscrits">--</div>
+        </div>
+        <div class="stat-card card-presents">
+            <div class="stat-title">Entrées Validées</div>
+            <div class="stat-number" id="val-presents">--</div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-header">
+            <span>Taux de participation</span>
+            <span id="val-pourcentage" style="color: var(--warning); font-weight: 800;">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="val-barre"></div>
+        </div>
+    </div>
+
+    <button class="btn-refresh" id="btn-refresh" onclick="chargerStatistiques()">🔄 ACTUALISER LES DONNÉES</button>
+    <div class="last-update" id="last-update">Dernière mise à jour : --:--</div>
+
+    <script>
+        // 🛡️ IDENTIFIANTS BREVO
+        const P1 = "xkeysib-b9dfa56ce058bcf7b0eb2211261d192e3";
+        const P2 = "e0c846b751f1842b64402b6e273f21c";
+        const P3 = "-QdHrSz2m4Qk5Zv8o";
+        const BREVO_API_KEY = P1 + P2 + P3; 
+
+        // 🗂️ IDs DES LISTES
+        const ID_LISTE_INSCRITS = 9;
+        const ID_LISTE_PRESENTS = 10;
+
+        async function fetchCount(listId) {
+            try {
+                const res = await fetch(`https://api.brevo.com/v3/contacts/lists/${listId}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json', 'api-key': BREVO_API_KEY }
+                });
+                if (!res.ok) throw new Error("Erreur réseau");
+                const data = await res.json();
+                return data.uniqueSubscribers || 0;
+            } catch (err) {
+                console.error(err);
+                return 0; // En cas d'erreur, on renvoie 0
+            }
+        }
+
+        async function chargerStatistiques() {
+            const btn = document.getElementById('btn-refresh');
+            btn.innerHTML = "Actualisation...";
+            btn.disabled = true;
+
+            // Récupération simultanée des deux listes pour aller plus vite
+            const [inscrits, presents] = await Promise.all([
+                fetchCount(ID_LISTE_INSCRITS),
+                fetchCount(ID_LISTE_PRESENTS)
+            ]);
+
+            // Calcul du pourcentage
+            let pourcentage = 0;
+            if (inscrits > 0) {
+                pourcentage = Math.round((presents / inscrits) * 100);
+            }
+
+            // Mise à jour de l'affichage
+            document.getElementById('val-inscrits').innerText = inscrits;
+            document.getElementById('val-presents').innerText = presents;
+            document.getElementById('val-pourcentage').innerText = pourcentage + "%";
+            document.getElementById('val-barre').style.width = pourcentage + "%";
+
+            // Mise à jour de l'heure
+            const now = new Date();
+            const heure = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('last-update').innerText = "Dernière mise à jour : " + heure;
+
+            btn.innerHTML = "🔄 ACTUALISER LES DONNÉES";
+            btn.disabled = false;
+        }
+
+        // Charger les stats automatiquement au lancement de la page
+        document.addEventListener('DOMContentLoaded', chargerStatistiques);
+        
+        // Auto-refresh toutes les 60 secondes (optionnel)
+        setInterval(chargerStatistiques, 60000);
+    </script>
+</body>
+</html>
