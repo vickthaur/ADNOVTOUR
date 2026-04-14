@@ -64,16 +64,36 @@
             background: rgba(0,0,0,0.2); 
             padding: 20px; 
             border-radius: 24px;
-            margin-bottom: 25px; 
+            margin-bottom: 15px; 
             text-align: left;
             border: 1px solid rgba(255,255,255,0.05);
         }
         .info-item { display: flex; flex-direction: column; gap: 4px; }
-        .info-item.full { grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.1); pt: 10px; margin-top: 5px; padding-top: 10px;}
+        .info-item.full { grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 5px; }
         
         .info-item label { font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .info-item span { font-size: 14px; font-weight: 600; color: white; }
         .highlight { color: var(--warning) !important; }
+
+        /* 🆕 LÉGENDE INTÉRÊTS */
+        .legend-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        .legend-title {
+            font-size: 9px; font-weight: 800; color: var(--text-muted); 
+            text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px;
+        }
+        .legend-items {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+        }
+        .legend-item {
+            font-size: 11px; font-weight: 600; color: #cbd5e1;
+            background: rgba(0, 0, 0, 0.3); padding: 4px 10px; border-radius: 8px;
+        }
 
         .status-badge {
             padding: 12px 24px; border-radius: 100px; font-weight: 700; font-size: 13px;
@@ -109,7 +129,7 @@
             
             <div class="info-grid">
                 <div class="info-item">
-                    <label>Étude / Structure</label>
+                    <label>CRPCEN</label>
                     <span id="res-etude">...</span>
                 </div>
                 <div class="info-item">
@@ -122,11 +142,22 @@
                 </div>
                 <div class="info-item">
                     <label>Intérêt principal</label>
-                    <span id="res-interet">...</span>
+                    <span id="res-interet" class="highlight">...</span>
                 </div>
                 <div class="info-item full">
                     <label>Contact Email</label>
                     <span id="res-email" style="font-size: 12px; opacity: 0.8;">...</span>
+                </div>
+            </div>
+
+            <div class="legend-box">
+                <span class="legend-title">Légende : Intérêts (Brevo)</span>
+                <div class="legend-items">
+                    <span class="legend-item">1 = Cybersécurité</span>
+                    <span class="legend-item">2 = VigiNot</span>
+                    <span class="legend-item">3 = DictaNot</span>
+                    <span class="legend-item">4 = Visio</span>
+                    <span class="legend-item">5 = DPO</span>
                 </div>
             </div>
 
