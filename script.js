@@ -4,7 +4,7 @@
  */ 
 
 // 🛡️ TON URL GOOGLE (Gère tout, protège ta clé API Brevo)
-const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbwr31X28WxX8WBFa3Nf9VufMcjhXs-v-oc0suhZ9488DuH8P_DmwI_oSYxqcMEAcOK2/exec";
+const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbyZxb10VNcVWmLuOv4HUJwTD3Dw_v_iEL73U7mX7IVoaZTb5qh-18Qj2DpmgQg3JpoI/exec";
 
 const adnovEvents = { 
     "adnov_tour": { 
