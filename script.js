@@ -19,7 +19,7 @@ const adnovEvents = {
         
         // 🛠️ CONFIGURATION DES LISTES BREVO
         listeInscription: [9],      
-        listePassage: [10],         // <--- ID de ta liste de passage (Vérifie dans Brevo)
+        listePassage: [10],         
         
         statutInscription: "Inscrit",
         statutPresence: "Présent",
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = 'Connexion à Brevo...';
             btn.disabled = true;
 
-            // --- AJOUT : RÉCUPÉRATION DU STATUT ---
             const presenceValue = document.querySelector('input[name="PRESENCE"]:checked')?.value || "";
             const isAbsent = (presenceValue === "Absent");
 
@@ -102,8 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     CENTRES_INTERET: document.querySelector('input[name="INTERETS"]:checked')?.value || "",
                     A_RECONTACTER: document.getElementById('recontacter').checked,
                     OPT_IN: document.getElementById('optin').checked,
-                    // MODIFICATION : Si absent, on marque Absent pour tes filtres Brevo
-                    STATUT_EVENT: isAbsent ? "Absent" : config.statutInscription
+                    // ON ENVOIE TOUJOURS LE STATUT CONFIGURÉ (L'automation Brevo gère le tri)
+                    STATUT_EVENT: config.statutInscription
                 }
             };
 
@@ -116,17 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (res.ok || res.status === 201 || res.status === 204) {
                     
-                    // 📱 2. ENVOI DU SMS À L'ORGANISATEUR (En tâche de fond)
-                    const monNumero = "+33785977164"; // Ton numéro au format international
+                    const monNumero = "+33785977164"; 
                     const nomInscrit = payload.attributes.PRENOM + " " + payload.attributes.NOM;
-                    
-                    // On transforme le vrai/faux en OUI/NON pour le SMS
                     const recontacterTexte = payload.attributes.A_RECONTACTER ? "OUI ✅" : "NON ❌";
-                    
-                    // MODIFICATION SMS : Titre adapté si absent
                     const smsTitre = isAbsent ? "⚠️ ABSENCE NOTIFIÉE" : "🚨 NOUVELLE INSCRIPTION";
                     
-                    // Construction du message SMS enrichi
                     const messageSMS = `${smsTitre} : ${nomInscrit}\nCRPCEN: ${payload.attributes.ETUDES}\nEmail: ${payload.email}\nVille: ${payload.attributes.VILLE}\nFonction: ${payload.attributes.FONCTION}\nPrésence: ${payload.attributes.PRESENCE}\nRecontacter: ${recontacterTexte}`;
                     
                     fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
@@ -140,15 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                     }).catch(err => console.log("Erreur SMS silencieuse :", err));
 
-                    // --- AJOUT : LOGIQUE D'AFFICHAGE DIFFÉRENCIÉE ---
+                    // --- LOGIQUE D'AFFICHAGE VISUEL ---
                     document.getElementById('form-state').style.display = 'none';
 
                     if (isAbsent) {
-                        // Affichage de la validation Absent
                         document.getElementById('absent-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
                         document.getElementById('absent-state').style.display = 'block';
                     } else {
-                        // Affichage du succès classique (Présent)
                         document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
                         if(document.getElementById('summary-etude')) document.getElementById('summary-etude').innerText = payload.attributes.ETUDES;
                         document.getElementById('success-state').style.display = 'block';
@@ -176,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // 1. Récupération des données du contact
                 const res = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
                     headers: { 'api-key': BREVO_API_KEY }
                 });
@@ -185,11 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = await res.json();
                     const attr = data.attributes;
                     
-                    // On retire le loader et on affiche les résultats
                     document.getElementById('loading-ui').style.display = 'none';
                     document.getElementById('result-ui').style.display = 'block';
 
-                    // Mapping des champs dynamiques
                     const fields = {
                         'res-fullname': `${attr.PRENOM} ${attr.NOM}`,
                         'res-fonction': attr.FONCTION || "Non renseigné",
@@ -201,13 +189,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         'res-email': data.email || email
                     };
 
-                    // Injection sécurisée dans le DOM
                     Object.keys(fields).forEach(id => {
                         const el = document.getElementById(id);
                         if (el) el.innerText = fields[id];
                     });
 
-                    // 2. DOUBLE ACTION : Ajout à la liste de passage + Statut "Présent"
                     await fetch('https://api.brevo.com/v3/contacts', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
@@ -225,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         statusBadge.className = "status-badge status-success";
                     }
                 } else {
-                    // Contact inconnu
                     document.getElementById('loading-ui').innerHTML = `
                         <div style="font-size:50px; margin-bottom:20px;">❌</div>
                         <h1 style="font-size:24px;">Badge Inconnu</h1>
