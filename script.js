@@ -1,5 +1,5 @@
 /** * 🎯 CONFIGURATION ADNOV TOUR - Système Automatisé Master
- * 🧠 LE CERVEAU CENTRAL (Connexion directe Brevo)
+ * 🧠 LE CERVEAU CENTRAL (Connexion directe Brevo + Alerte SMS Organisateur)
  * Gère : Inscription, Validation, Double-Listing Brevo et Design Dynamique.
  */ 
 
@@ -110,10 +110,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 
                 if (res.ok || res.status === 201 || res.status === 204) {
+                    
+                    // 📱 2. ENVOI DU SMS À L'ORGANISATEUR (En tâche de fond)
+                    const monNumero = "+33785977164"; // Ton numéro au format international
+                    const nomInscrit = payload.attributes.PRENOM + " " + payload.attributes.NOM;
+                    
+                    fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
+                        body: JSON.stringify({
+                            "type": "transactional",
+                            "sender": "ADNOV",
+                            "recipient": monNumero,
+                            "content": `🚨 Nouvelle inscription : ${nomInscrit} (Étude: ${payload.attributes.ETUDES}).`
+                        })
+                    }).catch(err => console.log("Erreur SMS silencieuse :", err));
+
+                    // 3. Affichage du succès pour l'utilisateur
                     document.getElementById('summary-name').innerHTML = `<strong>${payload.attributes.PRENOM} ${payload.attributes.NOM}</strong>`;
                     if(document.getElementById('summary-etude')) document.getElementById('summary-etude').innerText = payload.attributes.ETUDES;
                     document.getElementById('form-state').style.display = 'none';
                     document.getElementById('success-state').style.display = 'block';
+
                 } else {
                     const errorData = await res.json();
                     alert("Erreur Brevo : " + errorData.message);
