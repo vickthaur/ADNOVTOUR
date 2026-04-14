@@ -99,6 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     COMMERCIAL_REFERENT: document.getElementById('commercial').value.trim(),
                     CENTRES_INTERET: document.querySelector('input[name="INTERETS"]:checked')?.value || "",
                     A_RECONTACTER: document.getElementById('recontacter').checked,
+                    
+                    // 🆕 Récupération de l'Opt-in pour la newsletter/RGPD
+                    OPT_IN: document.getElementById('optin').checked,
+                    
                     STATUT_EVENT: config.statutInscription
                 }
             };
@@ -158,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'res-ville': attr.VILLE || "-",
                         'res-commercial': attr.COMMERCIAL_REFERENT || "Aucun",
                         'res-interet': attr.CENTRES_INTERET || "Général",
+                        'res-presence': attr.PRESENCE || "Non renseigné",
                         'res-email': data.email || email
                     };
 
