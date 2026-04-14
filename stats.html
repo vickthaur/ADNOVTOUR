@@ -193,103 +193,68 @@
     <div class="last-update" id="last-update">Dernière mise à jour : --:--</div>
 
     <script>
-    // 🛡️ IDENTIFIANTS BREVO
-    const P1 = "xkeysib-b9dfa56ce058bcf7b0eb2211261d192e3";
-    const P2 = "e0c846b751f1842b64402b6e273f21c";
-    const P3 = "-QdHrSz2m4Qk5Zv8o";
-    const BREVO_API_KEY = P1 + P2 + P3; 
+        // 🛡️ IDENTIFIANTS BREVO
+        const P1 = "xkeysib-b9dfa56ce058bcf7b0eb2211261d192e3";
+        const P2 = "e0c846b751f1842b64402b6e273f21c";
+        const P3 = "-QdHrSz2m4Qk5Zv8o";
+        const BREVO_API_KEY = P1 + P2 + P3; 
 
-    // 🗂️ IDs DES LISTES
-    const ID_LISTE_MASTER = 9;   // Liste où sont tous les gens (Inscrits + Absents)
-    const ID_LISTE_PRESENTS = 10; // Liste de passage (uniquement ceux qui ont scanné)
+        // 🗂️ IDs DES LISTES
+        const ID_LISTE_INSCRITS = 9;
+        const ID_LISTE_PRESENTS = 10;
 
-    /**
-     * Cette fonction utilise l'API de recherche pour filtrer les vrais inscrits
-     * On exclut les gens qui ont mis "Absent"
-     */
-    async function fetchVraisInscrits() {
-        try {
-            const res = await fetch('https://api.brevo.com/v3/contacts/search', {
-                method: 'POST',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'api-key': BREVO_API_KEY 
-                },
-                body: JSON.stringify({
-                    "filter": {
-                        "action": "all",
-                        "condition": [
-                            {
-                                "attribute": "PRESENCE",
-                                "operator": "eq",
-                                "value": "Présent"
-                            }
-                        ],
-                        "listIds": [ID_LISTE_MASTER]
-                    }
-                })
-            });
-            const data = await res.json();
-            return data.count || 0;
-        } catch (err) {
-            console.error("Erreur Inscrits:", err);
-            return 0;
-        }
-    }
-
-    /**
-     * Pour les entrées validées, on garde le compte simple de la liste 10
-     */
-    async function fetchEntreesValidées() {
-        try {
-            const res = await fetch(`https://api.brevo.com/v3/contacts/lists/${ID_LISTE_PRESENTS}`, {
-                method: 'GET',
-                headers: { 'Accept': 'application/json', 'api-key': BREVO_API_KEY }
-            });
-            const data = await res.json();
-            return data.uniqueSubscribers || 0;
-        } catch (err) {
-            console.error("Erreur Passages:", err);
-            return 0;
-        }
-    }
-
-    async function chargerStatistiques() {
-        const btn = document.getElementById('btn-refresh');
-        btn.innerHTML = "Connexion Brevo...";
-        btn.disabled = true;
-
-        // On lance les deux calculs
-        const [totalVraisInscrits, totalPresents] = await Promise.all([
-            fetchVraisInscrits(),
-            fetchEntreesValidées()
-        ]);
-
-        // Calcul du pourcentage basé sur les VRAIS inscrits (ceux qui ont dit qu'ils venaient)
-        let pourcentage = 0;
-        if (totalVraisInscrits > 0) {
-            pourcentage = Math.round((totalPresents / totalVraisInscrits) * 100);
+        async function fetchCount(listId) {
+            try {
+                const res = await fetch(`https://api.brevo.com/v3/contacts/lists/${listId}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json', 'api-key': BREVO_API_KEY }
+                });
+                if (!res.ok) throw new Error("Erreur réseau");
+                const data = await res.json();
+                return data.uniqueSubscribers || 0;
+            } catch (err) {
+                console.error(err);
+                return 0; // En cas d'erreur, on renvoie 0
+            }
         }
 
-        // Mise à jour de l'affichage
-        document.getElementById('val-inscrits').innerText = totalVraisInscrits;
-        document.getElementById('val-presents').innerText = totalPresents;
-        document.getElementById('val-pourcentage').innerText = pourcentage + "%";
-        document.getElementById('val-barre').style.width = pourcentage + "%";
+        async function chargerStatistiques() {
+            const btn = document.getElementById('btn-refresh');
+            btn.innerHTML = "Actualisation...";
+            btn.disabled = true;
 
-        // Mise à jour de l'heure
-        const now = new Date();
-        const heure = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        document.getElementById('last-update').innerText = "Dernière mise à jour : " + heure;
+            // Récupération simultanée des deux listes pour aller plus vite
+            const [inscrits, presents] = await Promise.all([
+                fetchCount(ID_LISTE_INSCRITS),
+                fetchCount(ID_LISTE_PRESENTS)
+            ]);
 
-        btn.innerHTML = "🔄 ACTUALISER LES DONNÉES";
-        btn.disabled = false;
-    }
+            // Calcul du pourcentage
+            let pourcentage = 0;
+            if (inscrits > 0) {
+                pourcentage = Math.round((presents / inscrits) * 100);
+            }
 
-    // Lancement auto
-    document.addEventListener('DOMContentLoaded', chargerStatistiques);
-    setInterval(chargerStatistiques, 60000);
-</script>
+            // Mise à jour de l'affichage
+            document.getElementById('val-inscrits').innerText = inscrits;
+            document.getElementById('val-presents').innerText = presents;
+            document.getElementById('val-pourcentage').innerText = pourcentage + "%";
+            document.getElementById('val-barre').style.width = pourcentage + "%";
+
+            // Mise à jour de l'heure
+            const now = new Date();
+            const heure = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('last-update').innerText = "Dernière mise à jour : " + heure;
+
+            btn.innerHTML = "🔄 ACTUALISER LES DONNÉES";
+            btn.disabled = false;
+        }
+
+        // Charger les stats automatiquement au lancement de la page
+        document.addEventListener('DOMContentLoaded', chargerStatistiques);
+        
+        // Auto-refresh toutes les 60 secondes (optionnel)
+        setInterval(chargerStatistiques, 60000);
+    </script>
 </body>
 </html>
