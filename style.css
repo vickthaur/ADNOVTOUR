@@ -143,15 +143,143 @@ body {
 }
 
 /* ==========================================================================
-   BOUTONS RADIO
+   NOUVEAUX BLOCS : PRÉSENCE & OPT-IN
+   ========================================================================== */
+.presence-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.presence-container .section-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.presence-options {
+    display: flex;
+    gap: 30px;
+}
+
+.presence-options label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.presence-options input[type="radio"] {
+    appearance: none;
+    width: 22px; height: 22px;
+    border: 2px solid #cbd5e1;
+    border-radius: 50%;
+    background: white;
+    transition: var(--transition);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+.presence-options input[type="radio"]::before {
+    content: "";
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 0.2s transform ease-in-out;
+    background-color: white;
+}
+
+.presence-options input[type="radio"]:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.presence-options input[type="radio"]:checked::before { transform: scale(1); }
+
+/* Block Opt-in */
+.optin-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 25px 0;
+    padding-top: 25px;
+    border-top: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+.optin-container input[type="checkbox"] {
+    appearance: none;
+    width: 22px; height: 22px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    background: white;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: var(--transition);
+    display: grid;
+    place-content: center;
+}
+
+.optin-container input[type="checkbox"]::before {
+    content: "✓";
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    transform: scale(0);
+    transition: 0.2s transform ease-in-out;
+}
+
+.optin-container input[type="checkbox"]:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.optin-container input[type="checkbox"]:checked::before { transform: scale(1); }
+
+.optin-text {
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.optin-subtext {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* ==========================================================================
+   BOUTONS RADIO (Intérêts)
    ========================================================================== */
 .interests-container { margin-bottom: 30px; text-align: left; }
+.section-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+    display: block;
+}
 
 .radio-grid {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 15px;
 }
 
 .radio-card {
@@ -197,62 +325,31 @@ body {
 /* ==========================================================================
    ÉCRAN DE SUCCÈS PREMIUM
    ========================================================================== */
-#success-state {
-    text-align: center;
-    display: none; /* Masqué par défaut */
-}
+#success-state { text-align: center; display: none; }
 
-/* Animation Checkmark */
 .success-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 24px;
-    background: rgba(16, 185, 129, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    color: var(--success);
+    width: 80px; height: 80px; margin: 0 auto 24px;
+    background: rgba(16, 185, 129, 0.1); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; color: var(--success);
 }
 
 .attendee-summary {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius-md);
-    padding: 24px;
-    margin: 32px 0;
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md); padding: 24px; margin: 32px 0;
 }
 
-#summary-name {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 4px;
-}
-
-#summary-etude {
-    font-size: 15px;
-    color: var(--text-muted);
-}
+#summary-name { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+#summary-etude { font-size: 15px; color: var(--text-muted); }
 
 .btn-retour {
-    background: transparent;
-    color: var(--text-muted);
-    border: 2px solid #e2e8f0;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-    font-family: inherit;
+    background: transparent; color: var(--text-muted);
+    border: 2px solid #e2e8f0; padding: 14px 28px;
+    border-radius: 12px; font-weight: 700; cursor: pointer;
+    transition: var(--transition); font-family: inherit;
 }
 
-.btn-retour:hover {
-    background: #f1f5f9;
-    border-color: var(--accent);
-    color: var(--accent);
-}
+.btn-retour:hover { background: #f1f5f9; border-color: var(--accent); color: var(--accent); }
 
 /* ==========================================================================
    BOUTON PRINCIPAL & FOOTER
@@ -260,15 +357,9 @@ body {
 .submit-button {
     width: 100%;
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    color: white;
-    border: none;
-    padding: 22px;
-    border-radius: var(--radius-md);
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: var(--transition);
+    color: white; border: none; padding: 22px;
+    border-radius: var(--radius-md); font-size: 16px; font-weight: 800;
+    letter-spacing: 1px; cursor: pointer; transition: var(--transition);
     box-shadow: 0 15px 30px -10px rgba(10, 63, 112, 0.4);
 }
 
@@ -279,26 +370,15 @@ body {
 }
 
 .recontact-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background: #fffbea;
-    border: 1px dashed var(--warning);
-    border-radius: 18px;
-    margin: 30px 0;
-    cursor: pointer;
-    text-align: left;
+    display: flex; align-items: center; gap: 15px;
+    padding: 20px; background: #fffbea;
+    border: 1px dashed var(--warning); border-radius: 18px;
+    margin: 30px 0 0 0; cursor: pointer; text-align: left;
 }
 
 .footer {
-    margin-top: 35px;
-    font-size: 10px;
-    font-weight: 800;
-    color: #cbd5e1;
-    letter-spacing: 2px;
-    text-align: center;
-    text-transform: uppercase;
+    margin-top: 35px; font-size: 10px; font-weight: 800;
+    color: #cbd5e1; letter-spacing: 2px; text-align: center; text-transform: uppercase;
 }
 
 /* ==========================================================================
@@ -311,4 +391,5 @@ body {
     .form-grid { grid-template-columns: 1fr; gap: 14px; }
     .full-width { grid-column: span 1; }
     .submit-button { padding: 18px; font-size: 15px; }
+    .presence-options { flex-direction: column; gap: 15px; }
 }
