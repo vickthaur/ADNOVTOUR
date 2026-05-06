@@ -216,22 +216,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Accompagnants : affichage lisible
                     const accompAffiche = (!attr.NB_ACCOMPAGNANTS || attr.NB_ACCOMPAGNANTS === "0")
                         ? "Aucun"
-                        : attr.NB_ACCOMPAGNANTS;
+                        : `${attr.NB_ACCOMPAGNANTS} personne${attr.NB_ACCOMPAGNANTS > 1 ? 's' : ''}`;
 
                     const fields = {
-                        'res-fullname':  `${attr.PRENOM} ${attr.NOM}`,
-                        'res-fonction':  attr.FONCTION       || "Non renseigné",
-                        'res-etude':     attr.ETUDES         || "-",
-                        'res-accomp':    accompAffiche,
-                        'res-interet':   attr.CENTRES_INTERET || "Non renseigné",
-                        'res-presence':  attr.STATUT_EVENT   || "Non renseigné",
-                        'res-email':     data.email          || email
+                        'res-fullname': `${attr.PRENOM} ${attr.NOM}`,
+                        'res-fonction': attr.FONCTION     || "Non renseigné",
+                        'res-etude':    attr.ETUDES       || "-",
+                        'res-accomp':   accompAffiche,
+                        'res-presence': attr.STATUT_EVENT || "Non renseigné",
+                        'res-email':    data.email        || email
                     };
 
                     Object.keys(fields).forEach(id => {
                         const el = document.getElementById(id);
                         if (el) el.innerText = fields[id];
                     });
+
+                    // Thématiques : injection des tags dynamiquement
+                    const themesContainer = document.getElementById('res-themes-container');
+                    if (themesContainer) {
+                        const themesRaw = attr.CENTRES_INTERET || "";
+                        if (themesRaw) {
+                            themesContainer.innerHTML = themesRaw
+                                .split(';')
+                                .filter(t => t.trim())
+                                .map(t => `<span class="theme-tag">${t.trim()}</span>`)
+                                .join('');
+                        } else {
+                            themesContainer.innerHTML = `<span style="font-size:13px;color:#475569;font-style:italic;">Non renseigné</span>`;
+                        }
+                    }
 
                     // Mise à jour liste de passage + statut
                     await fetch('https://api.brevo.com/v3/contacts', {
