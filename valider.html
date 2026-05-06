@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Check-in | ADNOV TOUR</title>
-    
+
     <script src="script.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -21,24 +21,23 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: white; 
-            display: flex; justify-content: center; align-items: center; 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: white;
+            display: flex; justify-content: center; align-items: center;
             min-height: 100vh; padding: 20px;
             background-image: radial-gradient(circle at top center, rgba(43, 64, 211, 0.15) 0%, transparent 70%);
         }
 
-        .valider-card { 
-            background: var(--card-bg); 
-            width: 100%; max-width: 480px; 
-            border-radius: 32px; padding: 40px; 
-            text-align: center; 
+        .valider-card {
+            background: var(--card-bg);
+            width: 100%; max-width: 480px;
+            border-radius: 32px; padding: 40px;
+            text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
 
         .valider-card::before {
@@ -46,64 +45,120 @@
             background: linear-gradient(90deg, var(--primary), var(--accent), var(--warning));
         }
 
+        /* ── État chargement ── */
         .icon-state {
-            font-size: 50px; margin: 0 auto 20px; height: 80px; width: 80px;
+            font-size: 50px; margin: 0 auto 20px;
+            height: 80px; width: 80px;
             background: rgba(255,255,255,0.05); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
         }
 
-        .welcome-tag { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
-        .user-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
-        .user-fonction { font-size: 16px; color: var(--warning); font-weight: 700; text-transform: uppercase; margin-bottom: 25px; }
-        
-        /* Grille d'informations enrichie */
+        /* ── En-tête identité ── */
+        .welcome-tag {
+            font-size: 11px; font-weight: 800; color: var(--accent);
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+        }
+
+        .user-name {
+            font-size: 34px; font-weight: 800; margin-bottom: 6px; line-height: 1.1;
+        }
+
+        .user-fonction {
+            font-size: 15px; color: var(--warning); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 28px;
+        }
+
+        /* ── Bloc accompagnants (mise en avant) ── */
+        .accomp-banner {
+            background: rgba(253, 197, 51, 0.08);
+            border: 1px solid rgba(253, 197, 51, 0.25);
+            border-radius: 16px; padding: 14px 20px;
+            margin-bottom: 16px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .accomp-banner .label {
+            font-size: 10px; font-weight: 800; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .accomp-banner .value {
+            font-size: 20px; font-weight: 800; color: var(--warning);
+        }
+
+        /* ── Grille infos ── */
         .info-grid {
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
-            background: rgba(0,0,0,0.2); 
-            padding: 20px; 
-            border-radius: 24px;
-            margin-bottom: 15px; 
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
             text-align: left;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .info-item { display: flex; flex-direction: column; gap: 4px; }
-        .info-item.full { grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 5px; }
-        
-        .info-item label { font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .info-item span { font-size: 14px; font-weight: 600; color: white; }
-        .highlight { color: var(--warning) !important; }
 
-        /* 🆕 LÉGENDE INTÉRÊTS */
-        .legend-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 15px;
+        .info-item { display: flex; flex-direction: column; gap: 4px; }
+
+        .info-item.full {
+            grid-column: span 2;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 12px; margin-top: 4px;
+        }
+
+        .info-item label {
+            font-size: 9px; font-weight: 800; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .info-item span {
+            font-size: 14px; font-weight: 600; color: white;
+        }
+
+        /* ── Bloc thématiques ── */
+        .themes-box {
+            background: rgba(43, 64, 211, 0.07);
+            border: 1px solid rgba(43, 64, 211, 0.2);
+            border-radius: 16px; padding: 16px 20px;
+            margin-bottom: 20px; text-align: left;
+        }
+
+        .themes-box .themes-label {
+            font-size: 9px; font-weight: 800; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px;
+            display: block; margin-bottom: 10px;
+        }
+
+        .themes-tags {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+
+        .theme-tag {
+            font-size: 12px; font-weight: 700; color: #93c5fd;
+            background: rgba(43, 64, 211, 0.2);
+            padding: 5px 12px; border-radius: 8px;
+            border: 1px solid rgba(43, 64, 211, 0.3);
+        }
+
+        /* ── Badge statut ── */
+        .status-badge {
+            padding: 12px 24px; border-radius: 100px;
+            font-weight: 700; font-size: 13px;
+            display: inline-flex; align-items: center; gap: 8px;
             margin-bottom: 25px;
         }
-        .legend-title {
-            font-size: 9px; font-weight: 800; color: var(--text-muted); 
-            text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px;
-        }
-        .legend-items {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
-        }
-        .legend-item {
-            font-size: 11px; font-weight: 600; color: #cbd5e1;
-            background: rgba(0, 0, 0, 0.3); padding: 4px 10px; border-radius: 8px;
+
+        .status-loading { background: rgba(255,255,255,0.08); color: white; }
+        .status-success {
+            background: rgba(16, 185, 129, 0.1); color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
-        .status-badge {
-            padding: 12px 24px; border-radius: 100px; font-weight: 700; font-size: 13px;
-            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px;
-        }
-        .status-loading { background: rgba(255,255,255,0.1); color: white; }
-        .status-success { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-
+        /* ── Bouton suite ── */
         .btn-next {
-            display: block; width: 100%; background: var(--accent); color: white;
+            display: block; width: 100%;
+            background: var(--accent); color: white;
             text-decoration: none; padding: 20px; border-radius: 18px;
             font-size: 16px; font-weight: 800; transition: 0.3s;
             box-shadow: 0 10px 20px rgba(43, 64, 211, 0.3);
@@ -111,62 +166,69 @@
         .btn-next:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
         .pulse { animation: pulseAnim 1.5s infinite; }
-        @keyframes pulseAnim { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulseAnim { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
     </style>
 </head>
 <body>
 
     <div class="valider-card">
+
+        <!-- ── Chargement ── -->
         <div id="loading-ui">
             <div class="icon-state pulse">⌛</div>
-            <p style="font-weight: 700; letter-spacing: 1px;">IDENTIFICATION...</p>
+            <p style="font-weight:700;letter-spacing:1px;">IDENTIFICATION...</p>
         </div>
 
-        <div id="result-ui" style="display: none;">
-            <div class="welcome-tag">Accès Adnov Tour</div>
+        <!-- ── Résultat ── -->
+        <div id="result-ui" style="display:none;">
+
+            <div class="welcome-tag">Accueil · ADNOV TOUR Toulouse</div>
+
+            <!-- Identité principale -->
             <h1 class="user-name" id="res-fullname">...</h1>
             <div class="user-fonction" id="res-fonction">...</div>
-            
+
+            <!-- Accompagnants : info critique pour l'accueil -->
+            <div class="accomp-banner">
+                <div>
+                    <div class="label">Accompagnants</div>
+                    <div style="font-size:12px;color:#64748b;margin-top:2px;">Personnes à accueillir en plus</div>
+                </div>
+                <div class="value" id="res-accomp">—</div>
+            </div>
+
+            <!-- Infos secondaires -->
             <div class="info-grid">
                 <div class="info-item">
                     <label>CRPCEN</label>
                     <span id="res-etude">...</span>
                 </div>
                 <div class="info-item">
-                    <label>Ville</label>
-                    <span id="res-ville">...</span>
-                </div>
-                <div class="info-item">
-                    <label>Commercial Référent</label>
-                    <span id="res-commercial" class="highlight">...</span>
-                </div>
-                <div class="info-item">
-                    <label>Intérêt principal</label>
-                    <span id="res-interet" class="highlight">...</span>
+                    <label>Statut</label>
+                    <span id="res-presence" style="color:#10b981;">...</span>
                 </div>
                 <div class="info-item full">
-                    <label>Contact Email</label>
-                    <span id="res-email" style="font-size: 12px; opacity: 0.8;">...</span>
+                    <label>Email</label>
+                    <span id="res-email" style="font-size:12px;opacity:0.7;">...</span>
                 </div>
             </div>
 
-            <div class="legend-box">
-                <span class="legend-title">Légende : Intérêts (Brevo)</span>
-                <div class="legend-items">
-                    <span class="legend-item">1 = Cybersécurité</span>
-                    <span class="legend-item">2 = VigiNot</span>
-                    <span class="legend-item">3 = DictaNot</span>
-                    <span class="legend-item">4 = Visio</span>
-                    <span class="legend-item">5 = DPO</span>
+            <!-- Thématiques d'intérêt -->
+            <div class="themes-box">
+                <span class="themes-label">Thématiques d'intérêt</span>
+                <div class="themes-tags" id="res-themes-container">
+                    <!-- Injecté dynamiquement -->
                 </div>
             </div>
 
+            <!-- Statut synchronisation Brevo -->
             <div id="res-status" class="status-badge status-loading">
                 <span class="pulse">⚙️ Synchronisation...</span>
             </div>
 
             <a href="scan.html" class="btn-next">SCANNER LE SUIVANT</a>
         </div>
+
     </div>
 
 </body>
