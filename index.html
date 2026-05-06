@@ -19,101 +19,127 @@
             <p class="subtitle">Inscrivez-vous pour valider votre présence et obtenir votre QR code d'accès.</p>
 
             <form id="form-inscription" onsubmit="event.preventDefault(); return false;">
-                
-                <div class="form-group full-width" style="margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-                    <label style="display: block; margin-bottom: 12px; font-weight: 700; color: white;">Seriez vous ? *</label>
-                    <div style="display: flex; gap: 30px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #cbd5e1; font-size: 15px; font-weight: 600;">
-                            <input type="radio" name="STATUT_EVENT" value="Présent" required style="width: 18px; height: 18px; accent-color: var(--accent);">
-                            Présent
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #cbd5e1; font-size: 15px; font-weight: 600;">
-                            <input type="radio" name="STATUT_EVENT" value="Absent" required style="width: 18px; height: 18px; accent-color: var(--accent);">
-                            Absent
-                        </label>
-                    </div>
-                </div>
 
+                <!-- ── 1-6 : Informations personnelles ── -->
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Entrez votre NOM *</label>
+                        <label>Nom *</label>
                         <input type="text" id="nom" name="NOM" placeholder="Ex: Dupont" required>
                     </div>
                     <div class="form-group">
-                        <label>Entrez votre PRENOM *</label>
+                        <label>Prénom *</label>
                         <input type="text" id="prenom" name="PRENOM" placeholder="Ex: Jean" required>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label>Entrez votre VILLE *</label>
-                        <input type="text" id="ville" name="VILLE" placeholder="Ex: Lyon" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Entrez votre CRPCEN *</label>
+                        <label>CRPCEN *<span style="display:block;font-size:11px;font-weight:400;color:#94a3b8;margin-top:3px;">Merci d'indiquer votre numéro CRPCEN</span></label>
                         <input type="text" id="etudes" name="ETUDES" placeholder="01000" required>
                     </div>
+                    <div class="form-group">
+                        <label>Fonction *</label>
+                        <select id="fonction" name="FONCTION" required style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-family:inherit;font-size:15px;appearance:none;-webkit-appearance:none;cursor:pointer;outline:none;">
+                            <option value="" disabled selected style="color:#64748b;">Sélectionnez votre réponse</option>
+                            <option value="Notaire">Notaire</option>
+                            <option value="Clerc de notaire">Clerc de notaire</option>
+                            <option value="Formaliste">Formaliste</option>
+                            <option value="Comptable">Comptable</option>
+                            <option value="Secrétaire">Secrétaire</option>
+                            <option value="Stagiaire">Stagiaire</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
 
                     <div class="form-group">
-                        <label>Entrez votre FONCTION *</label>
-                        <input type="text" id="fonction" name="FONCTION" placeholder="Ex: Notaire" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Entrez votre SMS *</label>
-                        <input type="tel" id="sms" name="SMS" placeholder="06..." required>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>Veuillez renseigner votre adresse email pour vous inscrire *</label>
+                        <label>Email professionnel *</label>
                         <input type="email" id="email" name="EMAIL" placeholder="jean.dupont@xyz.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone *</label>
+                        <input type="tel" id="sms" name="SMS" placeholder="06..." required>
                     </div>
                 </div>
 
-                <div class="interests-container">
-                    <label class="section-label">Vos centres d'intérêts *</label>
+                <!-- ── Q7 : Présence ── -->
+                <div class="form-group full-width" style="margin-top:8px;margin-bottom:0;background:rgba(255,255,255,0.03);padding:15px 20px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+                    <label style="display:block;margin-bottom:12px;font-weight:700;color:white;">Participerez-vous à l'événement du 18 juin à Toulouse ? *</label>
+                    <div style="display:flex;gap:30px;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#cbd5e1;font-size:15px;font-weight:600;">
+                            <input type="radio" name="STATUT_EVENT" value="Présent" id="radio-present" required style="width:18px;height:18px;accent-color:var(--accent);">
+                            Oui, je serai présent
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#cbd5e1;font-size:15px;font-weight:600;">
+                            <input type="radio" name="STATUT_EVENT" value="Absent" id="radio-absent" style="width:18px;height:18px;accent-color:var(--accent);">
+                            Non, je ne serai pas disponible
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ── Q8 : Accompagnants (conditionnel si Présent) ── -->
+                <div id="section-accompagnants" style="display:none;margin-top:16px;background:rgba(255,255,255,0.03);padding:15px 20px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+                    <label style="display:block;margin-bottom:12px;font-weight:700;color:white;">Nombre d'accompagnants</label>
+                    <div style="display:flex;gap:20px;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#cbd5e1;font-size:15px;font-weight:600;">
+                            <input type="radio" name="NB_ACCOMPAGNANTS" value="0" checked style="width:18px;height:18px;accent-color:var(--accent);">
+                            Aucun
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#cbd5e1;font-size:15px;font-weight:600;">
+                            <input type="radio" name="NB_ACCOMPAGNANTS" value="1" style="width:18px;height:18px;accent-color:var(--accent);">
+                            1
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#cbd5e1;font-size:15px;font-weight:600;">
+                            <input type="radio" name="NB_ACCOMPAGNANTS" value="2" style="width:18px;height:18px;accent-color:var(--accent);">
+                            2
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#cbd5e1;font-size:15px;font-weight:600;">
+                            <input type="radio" name="NB_ACCOMPAGNANTS" value="3" style="width:18px;height:18px;accent-color:var(--accent);">
+                            3
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ── Q10 : Thématiques (checkboxes, pour tous) ── -->
+                <div class="interests-container" style="margin-top:16px;">
+                    <label class="section-label">Thématiques que vous souhaiteriez voir abordées en priorité *</label>
                     <div class="radio-grid">
                         <label class="radio-card">
-                            <input type="radio" name="INTERETS" value="cybersécurité" required>
+                            <input type="checkbox" name="INTERETS" value="Cybersécurité">
                             <div class="radio-tile">Cybersécurité</div>
                         </label>
                         <label class="radio-card">
-                            <input type="radio" name="INTERETS" value="VigiNot">
-                            <div class="radio-tile">VigiNot</div>
+                            <input type="checkbox" name="INTERETS" value="Protection des données">
+                            <div class="radio-tile">Protection des données</div>
                         </label>
                         <label class="radio-card">
-                            <input type="radio" name="INTERETS" value="DictaNot">
-                            <div class="radio-tile">DictaNot</div>
+                            <input type="checkbox" name="INTERETS" value="Téléphonie IP">
+                            <div class="radio-tile">Téléphonie IP</div>
                         </label>
                         <label class="radio-card">
-                            <input type="radio" name="INTERETS" value="Visio">
-                            <div class="radio-tile">Visio</div>
+                            <input type="checkbox" name="INTERETS" value="Site web / visibilité digitale">
+                            <div class="radio-tile">Site web / visibilité digitale</div>
                         </label>
                         <label class="radio-card">
-                            <input type="radio" name="INTERETS" value="DPO">
-                            <div class="radio-tile">DPO</div>
+                            <input type="checkbox" name="INTERETS" value="Immobilier">
+                            <div class="radio-tile">Immobilier</div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="checkbox" name="INTERETS" value="Formation">
+                            <div class="radio-tile">Formation</div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="checkbox" name="INTERETS" value="Intelligence artificielle">
+                            <div class="radio-tile">Intelligence artificielle</div>
                         </label>
                     </div>
                 </div>
 
-                <div class="form-group full-width" style="margin-top: 10px;">
-                    <label>Votre commercial référent *</label>
-                    <input type="text" id="commercial" name="COMMERCIAL_REFERENT" placeholder="Nom du commercial" required>
-                </div>
-
-                <div class="recontact-container">
-                    <input type="checkbox" id="recontacter" name="A_RECONTACTER">
-                    <div class="recontact-text">
-                        <strong>Souhaitez-vous être recontacté ?</strong>
-                        <p>Cochez cette case pour qu'un expert vous rappelle.</p>
-                    </div>
-                </div>
-                
-                <div class="form-group full-width" style="margin-top: 20px; margin-bottom: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <label style="display: block; margin-bottom: 12px; font-weight: 700; color: white;">Consentement RGPD*</label>
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
-                        <input type="checkbox" id="optin" name="OPTIN" required style="width: 18px; height: 18px; accent-color: var(--accent); margin-top: 2px; flex-shrink: 0;">
-                        <div style="font-size: 13px; color: #cbd5e1; line-height: 1.5;">
-                            J'accepte de recevoir vos e-mails et confirme avoir pris connaissance de votre politique de confidentialité et mentions légales.
-                            <span style="display: block; font-size: 11px; color: #94a3b8; margin-top: 6px;">Vous pouvez vous désinscrire à tout moment en cliquant sur le lien présent dans nos emails.</span>
+                <!-- ── Q11 : Consentement RGPD ── -->
+                <div class="form-group full-width" style="margin-top:20px;margin-bottom:25px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
+                    <label style="display:block;margin-bottom:12px;font-weight:700;color:white;">Consentement RGPD *</label>
+                    <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+                        <input type="checkbox" id="optin" name="OPTIN" required style="width:18px;height:18px;accent-color:var(--accent);margin-top:2px;flex-shrink:0;">
+                        <div style="font-size:13px;color:#cbd5e1;line-height:1.5;">
+                            J'accepte que mes coordonnées soient collectées dans le cadre de votre politique de protection des données, afin d'être contacté et recevoir des informations sur les solutions ADNOV.
+                            <span style="display:block;font-size:11px;color:#94a3b8;margin-top:6px;">Vous pouvez vous désinscrire à tout moment en cliquant sur le lien présent dans nos emails.</span>
                         </div>
                     </label>
                 </div>
@@ -122,10 +148,11 @@
             </form>
         </div>
 
-        <div id="success-state" style="display: none;">
+        <!-- ── État succès présent ── -->
+        <div id="success-state" style="display:none;">
             <div class="success-icon-wrapper">✨</div>
             <h2 class="success-title">C'est validé !</h2>
-            <p class="subtitle" style="margin-top: 10px;">
+            <p class="subtitle" style="margin-top:10px;">
                 Votre inscription pour <strong>ADNOV TOUR</strong> est confirmée.<br>
                 Surveillez votre boîte mail, votre badge vient de vous être envoyé.
             </p>
@@ -139,10 +166,11 @@
             <button onclick="window.location.reload();" class="btn-retour">Faire une autre inscription</button>
         </div>
 
-        <div id="absent-state" style="display: none; text-align: center;">
-            <div class="success-icon-wrapper" style="background: rgba(253, 197, 51, 0.1); color: var(--warning);">📅</div>
+        <!-- ── État absent ── -->
+        <div id="absent-state" style="display:none;text-align:center;">
+            <div class="success-icon-wrapper" style="background:rgba(253,197,51,0.1);color:var(--warning);">📅</div>
             <h2 class="success-title">C'est noté !</h2>
-            <p class="subtitle" style="margin-top: 10px;">
+            <p class="subtitle" style="margin-top:10px;">
                 Nous avons bien enregistré votre indisponibilité pour l'événement <strong>ADNOV TOUR</strong>.
             </p>
             
@@ -156,6 +184,24 @@
 
         <div class="footer">SECURED BY <strong>ADNOV</strong></div>
     </div>
+
+    <!-- ── Script conditionnel accompagnants ── -->
+    <script>
+        document.querySelectorAll('input[name="STATUT_EVENT"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var section = document.getElementById('section-accompagnants');
+                if (this.value === 'Présent') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                    // Reset accompagnants si absent
+                    document.querySelectorAll('input[name="NB_ACCOMPAGNANTS"]').forEach(function(r) {
+                        r.checked = r.value === '0';
+                    });
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
