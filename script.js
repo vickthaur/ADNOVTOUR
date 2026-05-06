@@ -108,7 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     NOM:               document.getElementById('nom').value.trim(),
                     PRENOM:            document.getElementById('prenom').value.trim(),
                     ETUDES:            document.getElementById('etudes').value.trim(),
-                    FONCTION:          document.getElementById('fonction').value,
+                    FONCTION: (document.getElementById('fonction').value === 'Autre')
+                                 ? (document.getElementById('fonction-autre').value.trim() || 'Autre')
+                                 : document.getElementById('fonction').value,
                     SMS:               helpers.formatPhone(document.getElementById('sms').value),
                     STATUT_EVENT:      statusValue,
                     NB_ACCOMPAGNANTS:  nbAccompagnants,
