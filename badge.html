@@ -7,7 +7,6 @@
     
     <script src="script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -21,22 +20,22 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: white; 
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; padding: 20px; 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: white;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
             background-image: radial-gradient(circle at top center, rgba(43, 64, 211, 0.2) 0%, transparent 70%);
         }
 
-        .badge-card { 
-            background: var(--card-bg); 
-            width: 100%; max-width: 380px; 
-            border-radius: 32px; padding: 40px 30px; 
-            text-align: center; 
-            border: 1px solid rgba(255,255,255,0.08); 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
+        .badge-card {
+            background: var(--card-bg);
+            width: 100%; max-width: 380px;
+            border-radius: 32px; padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
             position: relative; overflow: hidden;
         }
 
@@ -45,33 +44,77 @@
             background: linear-gradient(90deg, var(--primary), var(--accent), var(--warning));
         }
 
-        .brand-badge { font-size: 10px; font-weight: 800; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; }
+        .brand-badge {
+            font-size: 10px; font-weight: 800; color: var(--accent);
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+        }
+
+        .event-date {
+            font-size: 12px; font-weight: 600; color: #475569;
+            margin-bottom: 28px;
+        }
+
         .event-logo { font-size: 24px; font-weight: 800; color: white; margin-bottom: 30px; }
 
-        .user-identity { margin-bottom: 35px; min-height: 80px; }
-        .user-name { font-size: 26px; font-weight: 800; color: white; margin-bottom: 5px; }
-        .user-info { font-size: 14px; color: #94a3b8; font-weight: 500; }
+        .user-identity { margin-bottom: 30px; }
+        .user-name { font-size: 28px; font-weight: 800; color: white; margin-bottom: 6px; line-height: 1.2; }
+        
+        .user-meta {
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .user-fonction {
+            font-size: 13px; font-weight: 700; color: var(--warning);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .user-crpcen {
+            font-size: 12px; color: #64748b; font-weight: 600;
+        }
 
         .qr-section {
-            background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+            background: rgba(255,255,255,0.03); padding: 28px;
+            border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 20px;
         }
 
-        #qrcode { 
-            background: white; padding: 15px; border-radius: 20px; 
+        .qr-label {
+            font-size: 9px; font-weight: 800; color: #475569;
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px;
+        }
+
+        #qrcode {
+            background: white; padding: 15px; border-radius: 20px;
             display: inline-block; box-shadow: 0 0 30px rgba(43, 64, 211, 0.2);
         }
-        
+
         .status-pill {
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(16, 185, 129, 0.1); color: #10b981;
-            padding: 8px 16px; border-radius: 100px; font-size: 11px; font-weight: 700; margin-top: 15px;
+            padding: 8px 18px; border-radius: 100px;
+            font-size: 11px; font-weight: 700; margin-top: 16px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
         .btn-print {
-            display: block; width: 100%; background: var(--primary); color: white;
-            text-decoration: none; padding: 16px; border-radius: 16px;
-            font-size: 14px; font-weight: 700; margin-top: 20px; transition: 0.3s;
+            display: block; width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; text-decoration: none; padding: 18px;
+            border-radius: 16px; font-size: 14px; font-weight: 800;
+            margin-top: 20px; border: none; cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: 0.3s; letter-spacing: 0.5px;
+        }
+
+        .btn-print:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        .footer-secure {
+            margin-top: 20px; font-size: 10px; color: #334155;
+            font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .badge-card { box-shadow: none; border: 1px solid #e2e8f0; }
+            .btn-print { display: none; }
         }
     </style>
 </head>
@@ -79,65 +122,77 @@
 
     <div class="badge-card">
         <div class="brand-badge">Badge Officiel</div>
+        <div class="event-date">18 Juin 2025 · Toulouse</div>
         <div class="event-logo">ADNOV TOUR</div>
-        
+
         <div class="user-identity">
             <div class="user-name" id="display-name">Chargement...</div>
-            <div class="user-info" id="display-info">Veuillez patienter</div>
+            <div class="user-meta">
+                <div class="user-fonction" id="display-fonction">—</div>
+                <div class="user-crpcen" id="display-crpcen">CRPCEN —</div>
+            </div>
         </div>
 
         <div class="qr-section">
+            <div class="qr-label">Présentez ce QR code à l'accueil</div>
             <div id="qrcode"></div>
             <div class="status-pill">● INSCRIPTION VALIDÉE</div>
         </div>
 
         <button onclick="window.print()" class="btn-print">Imprimer ou Capturer</button>
-        <div style="margin-top: 20px; font-size: 10px; color: #475569;">SÉCURISÉ PAR ADNOV</div>
+        <div class="footer-secure">Sécurisé par ADNOV</div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const email = urlParams.get('email');
-            
-            // On récupère les infos soit de l'URL, soit de Brevo
-            let prenom = urlParams.get('prenom');
-            let nom = urlParams.get('nom');
-            let etude = urlParams.get('etude');
+
+            let prenom  = urlParams.get('prenom');
+            let nom     = urlParams.get('nom');
+            let etude   = urlParams.get('etude');
+            let fonction = urlParams.get('fonction');
 
             if (!email) {
-                document.getElementById('display-name').innerText = "Badge Invalide";
-                document.getElementById('display-info').innerText = "Lien incomplet";
+                document.getElementById('display-name').innerText    = "Badge Invalide";
+                document.getElementById('display-fonction').innerText = "Lien incomplet";
                 return;
             }
 
             // Si les infos ne sont pas dans l'URL, on les cherche dans Brevo
             if (!prenom || !nom) {
                 try {
-                    const res = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-                        headers: { 'api-key': ADNOV_CONFIG.apiKey }
-                    });
+                    const res = await fetch(
+                        `https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`,
+                        { headers: { 'api-key': BREVO_API_KEY } }
+                    );
                     if (res.ok) {
                         const data = await res.json();
-                        prenom = data.attributes.PRENOM;
-                        nom = data.attributes.NOM;
-                        etude = data.attributes.ETUDES;
+                        prenom   = data.attributes.PRENOM;
+                        nom      = data.attributes.NOM;
+                        etude    = data.attributes.ETUDES;
+                        fonction = data.attributes.FONCTION;
                     }
                 } catch (e) { console.error("Erreur API", e); }
             }
 
-            // Mise à jour de l'affichage
-            document.getElementById('display-name').innerText = `${prenom || ''} ${nom || ''}`.trim() || "Participant";
-            document.getElementById('display-info').innerText = etude || "Structure ADNOV TOUR";
+            document.getElementById('display-name').innerText =
+                `${prenom || ''} ${nom || ''}`.trim() || "Participant";
+            document.getElementById('display-fonction').innerText =
+                fonction || "ADNOV TOUR";
+            document.getElementById('display-crpcen').innerText =
+                etude ? `CRPCEN ${etude}` : "";
 
-            // Génération du QR Code
+            // Génération du QR Code (encode l'email = clé de validation)
             new QRCode(document.getElementById("qrcode"), {
-                text: email,
+                text: `https://adnov-tour.fr/valider.html?email=${encodeURIComponent(email)}`,
                 width: 160, height: 160,
-                colorDark : "#0a3f70", colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                colorDark:    "#0a3f70",
+                colorLight:   "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
         });
     </script>
+
 </body>
 </html>
