@@ -35,14 +35,13 @@
                         <label>Fonction *</label>
                         <select id="fonction" name="FONCTION" required>
                             <option value="" disabled selected>Sélectionnez votre réponse</option>
-                            <option value="Notaire">Notaire</option>
-                            <option value="Clerc de notaire">Clerc de notaire</option>
-                            <option value="Formaliste">Formaliste</option>
-                            <option value="Comptable">Comptable</option>
-                            <option value="Secrétaire">Secrétaire</option>
-                            <option value="Stagiaire">Stagiaire</option>
+                            <option value="Notaire associé">Notaire associé</option>
+                            <option value="Notaire salarié">Notaire salarié</option>
+                            <option value="Notaire assistant">Notaire assistant</option>
+                            <option value="Clerc / Collaborateur">Clerc / Collaborateur</option>
                             <option value="Autre">Autre</option>
                         </select>
+                        <input type="text" id="fonction-autre" name="FONCTION_AUTRE" placeholder="Précisez votre fonction..." style="display:none; margin-top:10px; width:100%; padding:16px 20px; border:2px solid transparent; border-radius:var(--radius-md); font-size:15px; font-weight:600; background-color:#f8fafc; color:var(--text-main); font-family:'Plus Jakarta Sans',sans-serif; outline:none; transition:var(--transition);">
                     </div>
                     <div class="form-group">
                         <label>Email professionnel *</label>
@@ -139,6 +138,33 @@
     </div>
 
     <script>
+        // ── Champ "Autre" conditionnel pour Fonction ──
+        document.getElementById('fonction').addEventListener('change', function() {
+            var autreInput = document.getElementById('fonction-autre');
+            if (this.value === 'Autre') {
+                autreInput.style.display = 'block';
+                autreInput.required = true;
+                autreInput.focus();
+            } else {
+                autreInput.style.display = 'none';
+                autreInput.required = false;
+                autreInput.value = '';
+            }
+        });
+
+        // Focus style sur le champ Autre
+        document.getElementById('fonction-autre').addEventListener('focus', function() {
+            this.style.borderColor = 'var(--accent)';
+            this.style.backgroundColor = '#ffffff';
+            this.style.boxShadow = '0 10px 20px -10px rgba(43,64,211,0.2)';
+        });
+        document.getElementById('fonction-autre').addEventListener('blur', function() {
+            this.style.borderColor = 'transparent';
+            this.style.backgroundColor = '#f8fafc';
+            this.style.boxShadow = 'none';
+        });
+
+        // ── Accompagnants conditionnel ──
         document.querySelectorAll('input[name="STATUT_EVENT"]').forEach(function(radio) {
             radio.addEventListener('change', function() {
                 var section = document.getElementById('section-accompagnants');
